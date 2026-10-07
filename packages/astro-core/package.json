@@ -1,6 +1,6 @@
 {
   "name": "@agency-manager/astro-core",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Shared Astro integration for agency client sites: layouts, sections, SEO, analytics and agency credit.",
   "license": "MIT",
   "type": "module",

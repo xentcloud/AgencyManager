@@ -9,5 +9,8 @@ Input: an issue with the source URL (customer's current site or a reference site
 3. Images: only use the customer's own images (logo, team, office). Never copy a competitor's text or photos.
    When building "based on a competitor", use the competitor only for structure and ideas.
 4. Pick a theme preset and colors matching the brand (logo colors) in `site.config.ts`.
-5. List in the PR: missing facts, conflicts, and features the old site had that the template lacks.
-6. Run `pnpm validate && pnpm build`.
+5. Fill the site `AGENTS.md`: Customer (business, audience, who requests changes), Brand & voice (tone, words
+   used on the old site), any specifications you can infer, and "Don't change without asking" items
+   (licensed claims, legal text, real staff photos). Leave the Change log alone.
+6. List in the PR: missing facts, conflicts, and features the old site had that the template lacks.
+7. Run `pnpm validate && pnpm build`.

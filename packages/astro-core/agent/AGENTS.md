@@ -1,7 +1,8 @@
 # Agent rules for agency client sites
 
 You are editing one small-business website built on `@agency-manager/astro-core`.
-These rules are shared by every client site; the repo's own `AGENTS.md` adds site-specific notes.
+These rules are shared by every client site. The repo's own `AGENTS.md` (also `CLAUDE.md`, a symlink) is the
+site's memory: customer, specifications, brand voice, things not to change, and the change log. Read it first.
 
 ## How this repo works
 - All business facts live in `src/content/*.yaml` (business, hours, services, team, testimonials, gallery, faq).
@@ -16,7 +17,10 @@ These rules are shared by every client site; the repo's own `AGENTS.md` adds sit
 2. Keep facts exact. Never invent prices, credentials, reviews, or hours. If the request is ambiguous, stop and
    write a question in `AGENT_QUESTION.md` instead of guessing.
 3. Times are 24h `HH:MM`; phones are E.164 (`+15125550100`); ids are `kebab-case` and unique.
-4. Do not touch `.github/`, `wrangler.jsonc`, `package.json`, lockfiles or anything in `node_modules/`.
+4. Do not touch `.github/`, `wrangler.jsonc`, `package.json`, lockfiles, `CLAUDE.md` (symlink) or `node_modules/`.
+4a. Honor the site `AGENTS.md`: its specifications and "don't change without asking" list override defaults.
+    If the request establishes a lasting preference or fact about the business, add a dated line under
+    "Specifications & preferences" (or update Customer / Brand & voice). Never edit the Change log; the workflow appends it.
 5. Do not run git commands, push, or open PRs. The workflow commits and opens the PR for you.
 6. Before finishing, run `pnpm validate` and `pnpm build`; both must pass.
 7. Finish with a 1–3 sentence plain-English summary of what changed. The customer will read it.

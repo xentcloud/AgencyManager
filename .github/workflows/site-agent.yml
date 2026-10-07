@@ -76,7 +76,7 @@ jobs:
           FEEDBACK: ${{ inputs.feedback }}
         run: |
           {
-            echo "Follow node_modules/@agency-manager/astro-core/agent/AGENTS.md and node_modules/@agency-manager/astro-core/agent/playbooks/change-request.md."
+            echo "First read AGENTS.md (this site's memory: customer specs, brand, don't-change list), then follow node_modules/@agency-manager/astro-core/agent/AGENTS.md and node_modules/@agency-manager/astro-core/agent/playbooks/change-request.md."
             echo "When done, write a 1-3 sentence plain-English summary for the customer to AGENT_SUMMARY.md in the repo root."
             echo
             echo "## Request (issue #${{ inputs.issue_number }})"
@@ -124,11 +124,12 @@ jobs:
         if: steps.question.outputs.asked != 'true'
         run: |
           changed=$(git status --porcelain | awk '{print $2}')
-          if echo "$changed" | grep -E '^(\.github/|wrangler\.jsonc|package\.json|pnpm-lock\.yaml|astro\.config\.mjs|tsconfig\.json|AGENTS\.md|CLAUDE\.md)'; then
+          # AGENTS.md is the site's memory and agents may update it; CLAUDE.md must stay a symlink to it.
+          if echo "$changed" | grep -E '^(\.github/|wrangler\.jsonc|package\.json|pnpm-lock\.yaml|astro\.config\.mjs|tsconfig\.json|CLAUDE\.md)'; then
             echo "::error::Agent modified protected files"; exit 1
           fi
           # Anything outside content/images/site config is a code change: staff must review before merge.
-          if echo "$changed" | grep -vE '^(src/content/|public/images/|site\.config\.ts$)' | grep -q .; then
+          if echo "$changed" | grep -vE '^(src/content/|public/images/|site\.config\.ts$|AGENTS\.md$)' | grep -q .; then
             echo "TIER=code" >> $GITHUB_ENV
           else
             echo "TIER=content" >> $GITHUB_ENV
@@ -149,7 +150,13 @@ jobs:
             gh issue edit "$N" --add-label needs-human
             exit 0
           fi
-          git commit -m "$(jq -r .title "$RUNNER_TEMP/issue.json") (#$N)"
+          title=$(jq -r .title "$RUNNER_TEMP/issue.json")
+          # Site memory: one change-log line per request (AGENTS.md ends with the Change log section).
+          if [ -f AGENTS.md ] && ! grep -q "· #$N ·" AGENTS.md; then
+            printf -- '- %s · #%s · %s\n' "$(date -u +%F)" "$N" "$title" >> AGENTS.md
+            git add AGENTS.md
+          fi
+          git commit -m "$title (#$N)"
           git push "https://x-access-token:${GH_TOKEN}@github.com/${GITHUB_REPOSITORY}.git" "$BRANCH"
           summary=$(cat "$RUNNER_TEMP/agent-summary.md" 2>/dev/null || echo "Automated change for #$N.")
           if pr=$(gh pr view "$BRANCH" --json number -q .number 2>/dev/null); then

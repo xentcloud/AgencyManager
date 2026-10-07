@@ -169,6 +169,9 @@ export const provisionSite = internalAction({
             .replace(/url: "[^"]*"/, `url: "${productionUrl ?? `https://${name}.workers.dev`}"`),
           "wrangler.jsonc": (await read("wrangler.jsonc")).replace('"site-template"', `"${name}"`),
           "package.json": (await read("package.json")).replace('"name": "site-template"', `"name": "${name}"`),
+          "AGENTS.md": (await read("AGENTS.md"))
+            .replace("- Business: (filled in at setup)", `- Business: ${site.orgName} (site: ${site.name})`)
+            .replace("- Site created: (filled in at setup)", `- Site created: ${new Date().toISOString().slice(0, 10)}`),
           "README.md": `# ${name}\n\n${site.name} website, managed by the agency portal.\n\n- Content: \`src/content/*.yaml\`; theme and sections: \`site.config.ts\`.\n- Change requests arrive as issues labeled \`type:change\`; merging to \`main\` deploys.\n`,
         };
         const base = await gh<{ tree: { sha: string } }>("GET", `/repos/${repo}/git/commits/${head.object.sha}`, undefined, "admin");

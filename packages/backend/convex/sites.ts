@@ -100,7 +100,8 @@ export const forProvisioning = internalQuery({
   handler: async (ctx, { siteId }) => {
     const site = await ctx.db.get(siteId);
     if (!site) throw new Error("Site not found");
-    return site;
+    const org = await ctx.db.get(site.orgId);
+    return { ...site, orgName: org?.name ?? site.name };
   },
 });
 
