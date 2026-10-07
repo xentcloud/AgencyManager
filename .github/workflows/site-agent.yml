@@ -68,10 +68,7 @@ jobs:
           fi
           git remote set-url origin "https://github.com/${GITHUB_REPOSITORY}.git"
 
-      - uses: pnpm/action-setup@v6
-      - uses: actions/setup-node@v7
-        with: { node-version: 22, cache: pnpm }
-      - run: pnpm install --frozen-lockfile
+      - uses: xentcloud/AgencyManager/.github/actions/setup-site@v1
 
       - name: Build prompt
         id: prompt

@@ -17,9 +17,6 @@ jobs:
     permissions: { contents: read }
     steps:
       - uses: actions/checkout@v7
-      - uses: pnpm/action-setup@v6
-      - uses: actions/setup-node@v7
-        with: { node-version: 22, cache: pnpm }
-      - run: pnpm install --frozen-lockfile
+      - uses: xentcloud/AgencyManager/.github/actions/setup-site@v1
       - run: pnpm validate
       - run: pnpm build
