@@ -9,3 +9,7 @@ dist
 *.log
 .DS_Store
 infra/convex/data
+
+# Real-customer migrations hold third-party business data; keep them out of the public repo.
+examples/*
+!examples/README.md

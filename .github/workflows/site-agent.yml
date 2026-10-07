@@ -42,19 +42,25 @@ jobs:
           if [[ ",$labels," == *",agent:codex,"* ]]; then echo "agent=codex" >> $GITHUB_OUTPUT; else echo "agent=claude" >> $GITHUB_OUTPUT; fi
           echo "branch=agent/issue-$N" >> $GITHUB_OUTPUT
 
+      # Don't persist the App token in .git/config: `pnpm build` runs site code (astro config, overrides)
+      # that the agent may have edited. Only the push/PR step gets the token.
       - uses: actions/checkout@v7
         with:
-          token: ${{ steps.app.outputs.token }}
           fetch-depth: 0
+          persist-credentials: false
 
       - name: Use existing agent branch (revision) or create it
-        env: { BRANCH: "${{ steps.issue.outputs.branch }}" }
+        env:
+          BRANCH: ${{ steps.issue.outputs.branch }}
+          TOKEN: ${{ steps.app.outputs.token }}
         run: |
+          git remote set-url origin "https://x-access-token:${TOKEN}@github.com/${GITHUB_REPOSITORY}.git"
           if git ls-remote --exit-code --heads origin "$BRANCH" >/dev/null; then
             git fetch origin "$BRANCH" && git checkout "$BRANCH"
           else
             git checkout -b "$BRANCH"
           fi
+          git remote set-url origin "https://github.com/${GITHUB_REPOSITORY}.git"
 
       - uses: pnpm/action-setup@v6
       - uses: actions/setup-node@v7
@@ -67,7 +73,7 @@ jobs:
           FEEDBACK: ${{ inputs.feedback }}
         run: |
           {
-            echo "Follow node_modules/@agency/astro-core/agent/AGENTS.md and playbooks/change-request.md."
+            echo "Follow node_modules/@agency/astro-core/agent/AGENTS.md and node_modules/@agency/astro-core/agent/playbooks/change-request.md."
             echo
             echo "## Request (issue #${{ inputs.issue_number }})"
             jq -r '"### " + .title + "\n\n" + (.body // "")' issue.json
@@ -83,10 +89,12 @@ jobs:
         uses: anthropics/claude-code-action@v1
         with:
           anthropic_api_key: ${{ secrets.ANTHROPIC_API_KEY }}
-          github_token: ${{ steps.app.outputs.token }}
+          # Read-only job token: the agent step never holds the App token.
+          github_token: ${{ github.token }}
           prompt: ${{ steps.prompt.outputs.text }}
           claude_args: >-
             --allowedTools "Read,Edit,Write,Glob,Grep,Bash(pnpm validate),Bash(pnpm build)"
+            --disallowedTools "mcp__github_file_ops__commit_files,mcp__github_file_ops__delete_files"
 
       - name: Run Codex
         if: steps.issue.outputs.agent == 'codex'
@@ -109,8 +117,15 @@ jobs:
       - name: Guard changed paths
         if: steps.question.outputs.asked != 'true'
         run: |
-          if git status --porcelain | grep -E ' (\.github/|wrangler\.jsonc|package\.json|pnpm-lock\.yaml)'; then
+          changed=$(git status --porcelain | awk '{print $2}')
+          if echo "$changed" | grep -E '^(\.github/|wrangler\.jsonc|package\.json|pnpm-lock\.yaml|astro\.config\.mjs|tsconfig\.json|AGENTS\.md|CLAUDE\.md)'; then
             echo "::error::Agent modified protected files"; exit 1
+          fi
+          # Anything outside content/images/site config is a code change: staff must review before merge.
+          if echo "$changed" | grep -vE '^(src/content/|public/images/|site\.config\.ts$)' | grep -q .; then
+            echo "TIER=code" >> $GITHUB_ENV
+          else
+            echo "TIER=content" >> $GITHUB_ENV
           fi
 
       - name: Commit, push and open/update PR
@@ -129,13 +144,13 @@ jobs:
             exit 0
           fi
           git commit -m "$(jq -r .title issue.json) (#$N)"
-          git push origin "$BRANCH"
+          git push "https://x-access-token:${GH_TOKEN}@github.com/${GITHUB_REPOSITORY}.git" "$BRANCH"
           summary=$(cat /tmp/agent-summary.md 2>/dev/null || echo "Automated change for #$N.")
           if pr=$(gh pr view "$BRANCH" --json number -q .number 2>/dev/null); then
             gh pr comment "$pr" --body "Updated after feedback."$'\n\n'"$summary"
           else
             gh pr create --head "$BRANCH" --title "$(jq -r .title issue.json)" \
-              --body "$summary"$'\n\n'"Closes #$N" --label "agent:${{ steps.issue.outputs.agent }}"
+              --body "$summary"$'\n\n'"Closes #$N" --label "agent:${{ steps.issue.outputs.agent }}" --label "tier:$TIER"
           fi
 
       - name: Post question and hand off to a human

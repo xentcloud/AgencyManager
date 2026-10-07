@@ -6,6 +6,8 @@ export interface Env {
   EDGE_SHARED_SECRET: string;
   TURNSTILE_SECRET_KEY?: string;
   FORM_LIMITER: RateLimit;
+  /** Verified mailbox that receives inbound mail when the backend is unreachable, so requests aren't lost. */
+  FALLBACK_INBOX?: string;
 }
 
 const MAX_FIELD = 5000;
@@ -84,6 +86,9 @@ export default {
       messageId: parsed.messageId,
       inReplyTo: parsed.inReplyTo,
     });
-    if (!res.ok) message.setReject(`Temporary failure (${res.status})`);
+    if (!res.ok) {
+      if (env.FALLBACK_INBOX) await message.forward(env.FALLBACK_INBOX);
+      else message.setReject(`Temporary failure (${res.status})`);
+    }
   },
 } satisfies ExportedHandler<Env>;

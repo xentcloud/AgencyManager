@@ -15,10 +15,12 @@ on:
 jobs:
   agent:
     # Start when the portal labels an issue `type:change`, or revise when it posts `/revise <feedback>`.
+    # Contract: the portal posts `/revise <feedback>` on the ISSUE (never the PR).
     # Only the portal's GitHub App posts `/revise`, so customers and strangers can't trigger agent runs.
     if: >-
       (github.event_name == 'issues' && github.event.label.name == 'type:change') ||
-      (github.event_name == 'issue_comment' && github.event.comment.user.type == 'Bot' &&
+      (github.event_name == 'issue_comment' && !github.event.issue.pull_request &&
+       github.event.comment.user.type == 'Bot' &&
        startsWith(github.event.comment.body, '/revise'))
     uses: agency-manager/AgencyManager/.github/workflows/site-agent.yml@v1
     with:
