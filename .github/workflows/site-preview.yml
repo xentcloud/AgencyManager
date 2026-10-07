@@ -24,6 +24,7 @@ jobs:
       deployments: write
       pull-requests: write
     steps:
+      - uses: xentcloud/AgencyManager/.github/actions/setup-tools@v1
       - name: Require Cloudflare credentials
         env:
           TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}

@@ -1,0 +1,32 @@
+name: setup-tools
+description: Ensure gh and jq exist on the runner (self-hosted images may lack them). Verified against release checksums.
+inputs:
+  gh-version: { default: "2.102.0", description: GitHub CLI version }
+  jq-version: { default: "1.8.2", description: jq version }
+runs:
+  using: composite
+  steps:
+    - shell: bash
+      env:
+        GH_VERSION: ${{ inputs.gh-version }}
+        JQ_VERSION: ${{ inputs.jq-version }}
+      run: |
+        set -euo pipefail
+        bin="$RUNNER_TOOL_CACHE/agency-tools/bin"; mkdir -p "$bin"; echo "$bin" >> "$GITHUB_PATH"
+        case "$(uname -m)" in x86_64) arch=amd64 ;; aarch64|arm64) arch=arm64 ;; *) echo "unsupported arch"; exit 1 ;; esac
+        tmp="$(mktemp -d)"
+        if ! command -v gh >/dev/null && [ ! -x "$bin/gh" ]; then
+          f="gh_${GH_VERSION}_linux_${arch}.tar.gz"
+          curl -fsSL -o "$tmp/$f" "https://github.com/cli/cli/releases/download/v${GH_VERSION}/$f"
+          curl -fsSL -o "$tmp/sums" "https://github.com/cli/cli/releases/download/v${GH_VERSION}/gh_${GH_VERSION}_checksums.txt"
+          (cd "$tmp" && grep " $f\$" sums | sha256sum -c -)
+          tar -xzf "$tmp/$f" -C "$tmp" && install -m 0755 "$tmp/gh_${GH_VERSION}_linux_${arch}/bin/gh" "$bin/gh"
+        fi
+        if ! command -v jq >/dev/null && [ ! -x "$bin/jq" ]; then
+          f="jq-linux-${arch}"
+          curl -fsSL -o "$tmp/$f" "https://github.com/jqlang/jq/releases/download/jq-${JQ_VERSION}/$f"
+          curl -fsSL -o "$tmp/sums" "https://github.com/jqlang/jq/releases/download/jq-${JQ_VERSION}/sha256sum.txt"
+          (cd "$tmp" && grep " $f\$" sums | sha256sum -c -)
+          install -m 0755 "$tmp/$f" "$bin/jq"
+        fi
+        rm -rf "$tmp"
