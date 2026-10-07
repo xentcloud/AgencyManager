@@ -155,3 +155,26 @@ export const setState = internalMutation({
     await ctx.db.patch(changeRequestId, { state });
   },
 });
+
+/** Ops entry point (admin key only, e.g. `npx convex run`): open a request on behalf of the agency. */
+export const createAsAgency = internalMutation({
+  args: {
+    siteSlug: v.string(),
+    summary: v.string(),
+    body: v.string(),
+    kind: v.optional(v.union(v.literal("change"), v.literal("migrate"))),
+    agent: v.optional(v.union(v.literal("claude"), v.literal("codex"))),
+  },
+  handler: async (ctx, args) => {
+    const site = await ctx.db.query("sites").withIndex("by_slug", (q) => q.eq("slug", args.siteSlug)).first();
+    if (!site?.repo) throw new Error(`Site ${args.siteSlug} not found or has no repo`);
+    const id = await ctx.db.insert("changeRequests", {
+      orgId: site.orgId, siteId: site._id, source: "portal", summary: args.summary.slice(0, 120), body: args.body,
+      state: "received", tier: "content", kind: args.kind ?? "change", agent: args.agent ?? "claude",
+      replyToken: newReplyToken(), iterations: 0, requestedBy: "agency",
+    });
+    await log(ctx, "agency", "request.created", id);
+    await ctx.scheduler.runAfter(0, internal.github.app.createIssue, { changeRequestId: id });
+    return id;
+  },
+});
