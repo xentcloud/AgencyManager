@@ -1,0 +1,6 @@
+{
+  // One Worker per customer site, serving the static build.
+  "name": "site-lemus-dental",
+  "compatibility_date": "2026-10-01",
+  "assets": { "directory": "./dist", "not_found_handling": "404-page" }
+}

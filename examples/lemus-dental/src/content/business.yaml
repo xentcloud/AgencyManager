@@ -1,0 +1,51 @@
+name: Lemus Dental Group
+tagline: Family Dental Care
+description: >-
+  Lemus Dental Group is a family dental practice in Coral Gables, FL offering
+  general, cosmetic, restorative and specialty dentistry for adults, seniors
+  and children, with 24/7 emergency availability.
+schemaType: Dentist
+phone: "+13055670236"
+emergencyPhone: "+17867688205"
+fax: "+13054429333"
+email: drlemus@lemusdental.com
+address:
+  street: 5171 SW 8th St
+  city: Coral Gables
+  region: FL
+  postalCode: "33134"
+  country: US
+serviceArea:
+  - Coral Gables
+  - Miami
+hero:
+  heading: Family Dental Care
+  subheading: >-
+    Lemus Dental Group would be happy to help you keep your teeth healthy and
+    beautiful for life. We'd appreciate the chance to provide exceptional dental
+    care to you and your family.
+  image:
+    src: https://static.wixstatic.com/media/2cd876_ddef8726b00a4cce94732ea99d7e2fde~mv2.jpg
+    alt: Dentist treating a patient
+  cta:
+    label: Book Appointment
+    href: /contact
+about: |-
+  Lemus Dental is a team of experienced, dedicated dental professionals offering the best dental care for the whole family. We use advanced dental technology to ensure the satisfaction of every patient. Our goal is to determine the treatment you need or want and deliver it efficiently, with clinical excellence and courtesy.
+
+  Our practice mostly uses high-quality, mercury-free composite restorations and low-radiation digital X-rays, so you stay comfortable and spend as little time in the dental chair as possible. We offer all basic dental services, including high-quality crowns and bridges, plus specialized services such as oral surgery, endodontics, periodontics and implants.
+
+  Adults: we are committed to delivering qualified care for all adults, including basic treatments, implants and cosmetic dentistry.
+
+  Seniors: elderly patients are one of our priorities. We are specially trained in the dental needs of older adults, restoring comfort when chewing and a beautiful smile.
+
+  Children: we offer in-office restorative services for young children, home-care instructions, guidance on keeping teeth decay-free, when children should see the dentist, when baby and permanent teeth usually come in, and protective sealants.
+
+  Affordable dental care: ask us about accepted insurance plans and payment options, including payment plans.
+
+  Emergencies: we are available 24/7 for dental emergencies.
+social:
+  instagram: https://www.instagram.com/lemusdentalgroup
+logo:
+  src: https://static.wixstatic.com/media/3f4fbc_f14a52799b264dfd94d83ac7ff21cfad~mv2.png
+  alt: Lemus Dental Group

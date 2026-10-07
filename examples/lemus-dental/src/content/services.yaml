@@ -1,0 +1,103 @@
+- id: crowns
+  title: Crowns
+  summary: Custom tooth-shaped caps that restore weakened or damaged teeth and prevent further deterioration.
+  description: >-
+    A dental crown (cap) is placed over a weakened or damaged tooth to restore
+    its natural appearance. Crowns are used for severely chipped or broken
+    teeth, to cover a tooth after a root canal, to replace a large old filling,
+    or for cosmetic reasons. They can be all metal, all porcelain, or a
+    combination. Because every crown is custom made, it may take more than one
+    appointment to complete.
+- id: bridges
+  title: Bridges
+  summary: Fixed artificial teeth anchored to crowns to fill gaps left by missing teeth.
+  description: >-
+    A dental bridge is an artificial tooth connected to a set of crowns that
+    fills the gap created by one or more missing teeth, looking and functioning
+    like natural teeth. You wear a temporary bridge made from a model of your
+    mouth until the final bridge returns from our laboratory and is cemented.
+    Once cemented, there is no need to remove or reposition it. Bridges and
+    crowns solve problems caused by missing and damaged teeth and last for years.
+- id: fillings
+  title: Restorations (Fillings)
+  summary: Tooth-colored composite fillings to treat decay with a natural look.
+  description: >-
+    A composite filling is the restoration of choice for treating a decayed
+    tooth. Composites are tooth-colored fillings made of ceramic and plastic
+    compounds that mimic the appearance of natural teeth and are preferred by
+    many patients and dental professionals.
+- id: root-canal
+  title: Endodontic Treatment (Root Canal)
+  summary: Treatment that saves severely decayed or infected teeth by removing the infected nerve.
+  description: >-
+    A root canal treats severely decayed or infected teeth. When damage exposes
+    the pulp (the soft nerve tissue inside the tooth), infection can occur.
+    Symptoms include swelling of the gums and face, increased sensitivity to
+    temperature, and severe toothache; untreated, it can lead to abscess and
+    tooth loss. Stages: (1) the tooth is numbed and the infected nerve removed
+    through an opening in the crown; (2) each canal is cleaned and shaped, and
+    medicine may be placed; (3) the canals are filled with a rubber-like
+    material to seal them; (4) the tooth is restored, usually with a crown.
+- id: periodontal-disease
+  title: Periodontal (Gum) Disease Treatment
+  summary: Evaluation and treatment of gum disease, from reversible gingivitis to managing advanced periodontitis.
+  description: >-
+    Early gum disease (gingivitis) affects only the soft tissues and can be
+    reversed if caught early. Once infection reaches the bone, damage is
+    permanent and can only be managed with professional treatment. Daily
+    brushing and flossing help, but regular exams and cleanings are needed to
+    remove plaque and tartar and catch gum disease before it becomes
+    irreversible. Many patients have no symptoms until it is too late, so
+    schedule an evaluation.
+- id: oral-surgery
+  title: Oral Surgery (Extractions)
+  summary: Simple and surgical tooth extractions for decayed, broken, or crowded teeth.
+  description: >-
+    Teeth may be extracted when decayed or broken, or to make room for other
+    teeth or orthodontic treatment. Simple extractions remove visible teeth
+    under local anesthesia using dental forceps. Surgical extractions address
+    teeth broken below the gum line or not fully erupted.
+- id: implants
+  title: Implants
+  summary: Metal posts that replace missing tooth roots and support crowns or dentures.
+  description: >-
+    Implants are replacement tooth roots: small metal posts placed into the
+    bone socket where teeth are missing, then covered with a crown or with
+    removable partial or complete dentures.
+- id: teeth-whitening
+  title: Teeth Whitening with Philips Zoom
+  summary: In-office light-activated whitening that can lighten teeth up to eight shades in about 45 minutes.
+  description: >-
+    Whitening is a common cosmetic procedure; techniques include strips, pens,
+    gels and laser whitening, generally using hydrogen peroxide or carbamide
+    peroxide. The Philips Zoom chairside light-activated gel and Whitening LED
+    Accelerator speed up and enhance the process — teeth can become up to eight
+    shades lighter in just 45 minutes.
+- id: veneers
+  title: Veneers
+  summary: Thin custom porcelain shells that cover the front of teeth to correct imperfections.
+  description: >-
+    Veneers are thin, custom-made shells of tooth-colored material such as
+    porcelain that cover the front of your teeth to correct imperfections. Your
+    dentist creates a model of your teeth, which a dental technician uses to
+    make your veneers. Veneers are stain-resistant, but avoiding coffee, tea,
+    red wine and tobacco helps keep your new smile looking its best.
+- id: dentures
+  title: Complete and Partial Dentures
+  summary: Removable replacements for some or all missing teeth and surrounding tissue.
+  description: >-
+    Complete dentures replace all teeth; partial dentures fill gaps when some
+    natural teeth remain and keep other teeth from shifting. Complete dentures
+    can be conventional (made after extractions once gums heal, usually 4 to 6
+    weeks, during which the patient is without teeth) or immediate (made in
+    advance and placed right after extraction, then adjusted or remade as
+    tissues heal). Dentures are durable and last many years but may need
+    remaking, repair or readjustment due to normal wear.
+- id: orthodontics
+  title: Orthodontics
+  summary: Effective, affordable braces and clear aligners for a straighter smile.
+  description: >-
+    Options include clear aligners and braces (metal, ceramic and micro
+    braces). We consider your age, possible jaw imbalances, differences in
+    tooth size and more to recommend the right treatment, aiming for results in
+    the shortest time with minimal discomfort.

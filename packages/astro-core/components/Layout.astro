@@ -21,6 +21,7 @@ const jsonLd = {
   description: business.description,
   url: config.url,
   telephone: business.phone,
+  faxNumber: business.fax,
   email: business.email,
   image: ogImage ? new URL(ogImage, config.url).href : undefined,
   address: {

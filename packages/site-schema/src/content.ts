@@ -8,6 +8,9 @@ export const businessSchema = z.object({
   /** schema.org LocalBusiness subtype, e.g. "Dentist", "RoofingContractor". */
   schemaType: z.string().default("LocalBusiness"),
   phone,
+  /** After-hours / 24-7 emergency line, if different from the main phone. */
+  emergencyPhone: phone.optional(),
+  fax: phone.optional(),
   email: z.email().optional(),
   address: z.object({
     street: z.string(),

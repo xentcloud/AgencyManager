@@ -10,6 +10,8 @@ const { endpoint, turnstileSiteKey } = config.forms;
     <div>
       <h2>Get in touch</h2>
       <p><a href={telHref(business.phone)}>{displayPhone(business.phone)}</a></p>
+      {business.emergencyPhone && <p>Emergencies: <a href={telHref(business.emergencyPhone)}>{displayPhone(business.emergencyPhone)}</a></p>}
+      {business.fax && <p class="muted">Fax: {displayPhone(business.fax)}</p>}
       {business.email && <p><a href={`mailto:${business.email}`}>{business.email}</a></p>}
       <address>{a.street}<br />{a.city}, {a.region} {a.postalCode}</address>
       <p><a href={`https://www.google.com/maps/search/?api=1&query=${mapQuery}`} rel="noopener" target="_blank">Get directions</a></p>

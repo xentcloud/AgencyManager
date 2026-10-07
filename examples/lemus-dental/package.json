@@ -1,0 +1,20 @@
+{
+  "name": "site-lemus-dental",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "astro dev",
+    "build": "agency-validate && astro build",
+    "validate": "agency-validate",
+    "preview": "wrangler dev",
+    "deploy": "wrangler deploy"
+  },
+  "dependencies": {
+    "@agency/astro-core": "workspace:^",
+    "@agency/site-schema": "workspace:^",
+    "astro": "^7.3.6"
+  },
+  "devDependencies": {
+    "wrangler": "^4.148.0"
+  }
+}
