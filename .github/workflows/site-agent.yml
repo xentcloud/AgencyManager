@@ -1,0 +1,153 @@
+# Reusable: run Claude Code or Codex on a change-request issue in a client site repo.
+# The agent only edits files. This workflow validates, commits and opens/updates the PR
+# using the agency GitHub App token, so `pull_request` workflows (preview deploy) fire.
+# The App must NOT have `workflows: write`, so agents can't change CI.
+name: site-agent
+
+on:
+  workflow_call:
+    inputs:
+      issue_number: { type: number, required: true }
+      feedback: { type: string, required: false, default: "" }
+    secrets:
+      AGENCY_APP_ID: { required: true }
+      AGENCY_APP_PRIVATE_KEY: { required: true }
+      ANTHROPIC_API_KEY: { required: false }
+      OPENAI_API_KEY: { required: false }
+
+concurrency:
+  group: agent-${{ github.repository }}-${{ inputs.issue_number }}
+  cancel-in-progress: false
+
+jobs:
+  agent:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    permissions:
+      contents: read
+    steps:
+      - id: app
+        uses: actions/create-github-app-token@v3
+        with:
+          app-id: ${{ secrets.AGENCY_APP_ID }}
+          private-key: ${{ secrets.AGENCY_APP_PRIVATE_KEY }}
+
+      - id: issue
+        env:
+          GH_TOKEN: ${{ steps.app.outputs.token }}
+          N: ${{ inputs.issue_number }}
+        run: |
+          gh api repos/$GITHUB_REPOSITORY/issues/$N > issue.json
+          labels=$(jq -r '[.labels[].name] | join(",")' issue.json)
+          if [[ ",$labels," == *",agent:codex,"* ]]; then echo "agent=codex" >> $GITHUB_OUTPUT; else echo "agent=claude" >> $GITHUB_OUTPUT; fi
+          echo "branch=agent/issue-$N" >> $GITHUB_OUTPUT
+
+      - uses: actions/checkout@v7
+        with:
+          token: ${{ steps.app.outputs.token }}
+          fetch-depth: 0
+
+      - name: Use existing agent branch (revision) or create it
+        env: { BRANCH: "${{ steps.issue.outputs.branch }}" }
+        run: |
+          if git ls-remote --exit-code --heads origin "$BRANCH" >/dev/null; then
+            git fetch origin "$BRANCH" && git checkout "$BRANCH"
+          else
+            git checkout -b "$BRANCH"
+          fi
+
+      - uses: pnpm/action-setup@v6
+      - uses: actions/setup-node@v7
+        with: { node-version: 22, cache: pnpm }
+      - run: pnpm install --frozen-lockfile
+
+      - name: Build prompt
+        id: prompt
+        env:
+          FEEDBACK: ${{ inputs.feedback }}
+        run: |
+          {
+            echo "Follow node_modules/@agency/astro-core/agent/AGENTS.md and playbooks/change-request.md."
+            echo
+            echo "## Request (issue #${{ inputs.issue_number }})"
+            jq -r '"### " + .title + "\n\n" + (.body // "")' issue.json
+            if [ -n "$FEEDBACK" ]; then
+              echo; echo "## Customer feedback on the current preview (apply this now)"; echo "$FEEDBACK"
+            fi
+          } > /tmp/agent-prompt.md
+          delim="EOF_$(openssl rand -hex 8)"
+          { echo "text<<$delim"; cat /tmp/agent-prompt.md; echo "$delim"; } >> $GITHUB_OUTPUT
+
+      - name: Run Claude Code
+        if: steps.issue.outputs.agent == 'claude'
+        uses: anthropics/claude-code-action@v1
+        with:
+          anthropic_api_key: ${{ secrets.ANTHROPIC_API_KEY }}
+          github_token: ${{ steps.app.outputs.token }}
+          prompt: ${{ steps.prompt.outputs.text }}
+          claude_args: >-
+            --allowedTools "Read,Edit,Write,Glob,Grep,Bash(pnpm validate),Bash(pnpm build)"
+
+      - name: Run Codex
+        if: steps.issue.outputs.agent == 'codex'
+        uses: openai/codex-action@v1
+        with:
+          openai-api-key: ${{ secrets.OPENAI_API_KEY }}
+          prompt-file: /tmp/agent-prompt.md
+          output-file: /tmp/agent-summary.md
+          sandbox: workspace-write
+
+      - name: Agent asked a question?
+        id: question
+        run: |
+          if [ -f AGENT_QUESTION.md ]; then echo "asked=true" >> $GITHUB_OUTPUT; fi
+
+      - name: Validate and build
+        if: steps.question.outputs.asked != 'true'
+        run: pnpm validate && pnpm build
+
+      - name: Guard changed paths
+        if: steps.question.outputs.asked != 'true'
+        run: |
+          if git status --porcelain | grep -E ' (\.github/|wrangler\.jsonc|package\.json|pnpm-lock\.yaml)'; then
+            echo "::error::Agent modified protected files"; exit 1
+          fi
+
+      - name: Commit, push and open/update PR
+        if: steps.question.outputs.asked != 'true'
+        env:
+          GH_TOKEN: ${{ steps.app.outputs.token }}
+          BRANCH: ${{ steps.issue.outputs.branch }}
+          N: ${{ inputs.issue_number }}
+        run: |
+          git config user.name "agency-bot"
+          git config user.email "agency-bot@users.noreply.github.com"
+          git add -A -- . ':!dist' ':!node_modules'
+          if git diff --cached --quiet; then
+            gh issue comment "$N" --body "The agent made no changes. Marking for human review."
+            gh issue edit "$N" --add-label needs-human
+            exit 0
+          fi
+          git commit -m "$(jq -r .title issue.json) (#$N)"
+          git push origin "$BRANCH"
+          summary=$(cat /tmp/agent-summary.md 2>/dev/null || echo "Automated change for #$N.")
+          if pr=$(gh pr view "$BRANCH" --json number -q .number 2>/dev/null); then
+            gh pr comment "$pr" --body "Updated after feedback."$'\n\n'"$summary"
+          else
+            gh pr create --head "$BRANCH" --title "$(jq -r .title issue.json)" \
+              --body "$summary"$'\n\n'"Closes #$N" --label "agent:${{ steps.issue.outputs.agent }}"
+          fi
+
+      - name: Post question and hand off to a human
+        if: steps.question.outputs.asked == 'true'
+        env: { GH_TOKEN: "${{ steps.app.outputs.token }}", N: "${{ inputs.issue_number }}" }
+        run: |
+          gh issue comment "$N" --body-file AGENT_QUESTION.md
+          gh issue edit "$N" --add-label needs-info
+
+      - name: Flag failure
+        if: failure()
+        env: { GH_TOKEN: "${{ steps.app.outputs.token }}", N: "${{ inputs.issue_number }}" }
+        run: |
+          gh issue comment "$N" --body "The agent run failed: $GITHUB_SERVER_URL/$GITHUB_REPOSITORY/actions/runs/$GITHUB_RUN_ID"
+          gh issue edit "$N" --add-label needs-human

@@ -1,7 +1,7 @@
 import { defineSchema, defineTable } from "convex/server";
 import { v } from "convex/values";
 
-export const channel = v.union(v.literal("sms"), v.literal("whatsapp"), v.literal("email"), v.literal("portal"));
+export const channel = v.union(v.literal("sms"), v.literal("whatsapp"), v.literal("email"), v.literal("portal"), v.literal("form"));
 
 export const memberRole = v.union(
   v.literal("admin"), // agency admin
@@ -67,6 +67,7 @@ export default defineSchema({
     workerName: v.optional(v.string()),
     productionUrl: v.optional(v.string()),
     coreVersion: v.optional(v.string()), // @agency/astro-core version on main
+    notifyEmail: v.optional(v.string()), // where contact-form submissions are sent
     status: v.union(v.literal("draft"), v.literal("building"), v.literal("live"), v.literal("paused"), v.literal("archived")),
   })
     .index("by_org", ["orgId"])
@@ -156,6 +157,7 @@ export default defineSchema({
 
   messages: defineTable({
     orgId: v.optional(v.id("organizations")),
+    siteId: v.optional(v.id("sites")),
     changeRequestId: v.optional(v.id("changeRequests")),
     prospectId: v.optional(v.id("prospects")),
     direction: v.union(v.literal("inbound"), v.literal("outbound")),

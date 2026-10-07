@@ -16,11 +16,13 @@
   "dependencies": {
     "@convex-dev/better-auth": "^0.12.5",
     "better-auth": "~1.6.33",
-    "convex": "^1.46.0"
+    "convex": "^1.46.0",
+    "nodemailer": "^10.0.16"
   },
   "devDependencies": {
     "@edge-runtime/vm": "^5.0.0",
     "@types/node": "^24.19.1",
+    "@types/nodemailer": "^8.0.2",
     "convex-test": "^0.0.60",
     "typescript": "^5.9.3",
     "vitest": "^4.1.11"

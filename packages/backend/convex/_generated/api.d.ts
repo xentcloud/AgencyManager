@@ -9,8 +9,13 @@
  */
 
 import type * as auth from "../auth.js";
+import type * as dev from "../dev.js";
+import type * as email_transport from "../email/transport.js";
+import type * as forms from "../forms.js";
 import type * as http from "../http.js";
+import type * as inbound from "../inbound.js";
 import type * as lib_access from "../lib/access.js";
+import type * as lib_edgeAuth from "../lib/edgeAuth.js";
 import type * as organizations from "../organizations.js";
 import type * as sites from "../sites.js";
 import type * as users from "../users.js";
@@ -23,8 +28,13 @@ import type {
 
 declare const fullApi: ApiFromModules<{
   auth: typeof auth;
+  dev: typeof dev;
+  "email/transport": typeof email_transport;
+  forms: typeof forms;
   http: typeof http;
+  inbound: typeof inbound;
   "lib/access": typeof lib_access;
+  "lib/edgeAuth": typeof lib_edgeAuth;
   organizations: typeof organizations;
   sites: typeof sites;
   users: typeof users;

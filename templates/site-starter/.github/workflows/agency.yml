@@ -1,0 +1,51 @@
+# `agency-manager/AgencyManager` is a placeholder for the agency's GitHub org/repo.
+# Thin caller: all logic lives in the agency's reusable workflows, so CI changes ship from one place.
+name: agency
+
+on:
+  issues:
+    types: [labeled]
+  issue_comment:
+    types: [created]
+  pull_request:
+    types: [opened, synchronize, reopened]
+  push:
+    branches: [main]
+
+jobs:
+  agent:
+    # Start when the portal labels an issue `type:change`, or revise when it posts `/revise <feedback>`.
+    # Only the portal's GitHub App posts `/revise`, so customers and strangers can't trigger agent runs.
+    if: >-
+      (github.event_name == 'issues' && github.event.label.name == 'type:change') ||
+      (github.event_name == 'issue_comment' && github.event.comment.user.type == 'Bot' &&
+       startsWith(github.event.comment.body, '/revise'))
+    uses: agency-manager/AgencyManager/.github/workflows/site-agent.yml@v1
+    with:
+      issue_number: ${{ github.event.issue.number }}
+      feedback: ${{ github.event_name == 'issue_comment' && github.event.comment.body || '' }}
+    # Explicit: the agent job never receives Cloudflare credentials.
+    secrets:
+      AGENCY_APP_ID: ${{ secrets.AGENCY_APP_ID }}
+      AGENCY_APP_PRIVATE_KEY: ${{ secrets.AGENCY_APP_PRIVATE_KEY }}
+      ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+      OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+
+  ci:
+    if: github.event_name == 'pull_request'
+    uses: agency-manager/AgencyManager/.github/workflows/site-ci.yml@v1
+
+  preview:
+    if: github.event_name == 'pull_request'
+    needs: ci
+    uses: agency-manager/AgencyManager/.github/workflows/site-preview.yml@v1
+    secrets:
+      CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+      CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+
+  deploy:
+    if: github.event_name == 'push'
+    uses: agency-manager/AgencyManager/.github/workflows/site-deploy.yml@v1
+    secrets:
+      CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+      CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}

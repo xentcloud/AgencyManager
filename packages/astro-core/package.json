@@ -5,13 +5,26 @@
   "license": "MIT",
   "type": "module",
   "exports": {
-    ".": { "types": "./dist/index.d.ts", "import": "./dist/index.js" },
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    },
     "./components/*": "./components/*",
     "./pages/*": "./pages/*",
     "./styles/*": "./styles/*",
-    "./virtual": { "types": "./virtual.d.ts" }
+    "./virtual": {
+      "types": "./virtual.d.ts"
+    },
+    "./agent/*": "./agent/*"
   },
-  "files": ["dist", "components", "pages", "styles", "virtual.d.ts"],
+  "files": [
+    "dist",
+    "components",
+    "pages",
+    "styles",
+    "agent",
+    "virtual.d.ts"
+  ],
   "scripts": {
     "build": "tsc -p tsconfig.json",
     "typecheck": "tsc -p tsconfig.json --noEmit"
