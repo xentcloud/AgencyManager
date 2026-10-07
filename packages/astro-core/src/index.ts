@@ -9,7 +9,7 @@ import {
   validateContentDir,
   type SiteConfigInput,
   type ValidationIssue,
-} from "@agency/site-schema";
+} from "@agency-manager/site-schema";
 
 export interface AgencyCredit {
   name: string;
@@ -60,7 +60,7 @@ export default function agency(siteConfig: SiteConfigInput, options: AgencyOptio
   const credit = options.credit ?? DEFAULT_CREDIT;
 
   return {
-    name: "@agency/astro-core",
+    name: "@agency-manager/astro-core",
     hooks: {
       "astro:config:setup": ({ config: astroConfig, updateConfig, injectRoute, addWatchFile }) => {
         const contentDir = fileURLToPath(new URL("src/content/", astroConfig.root));
@@ -96,4 +96,4 @@ export default function agency(siteConfig: SiteConfigInput, options: AgencyOptio
   };
 }
 
-export { defineSiteConfig } from "@agency/site-schema";
+export { defineSiteConfig } from "@agency-manager/site-schema";

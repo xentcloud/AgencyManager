@@ -73,7 +73,7 @@ jobs:
           FEEDBACK: ${{ inputs.feedback }}
         run: |
           {
-            echo "Follow node_modules/@agency/astro-core/agent/AGENTS.md and node_modules/@agency/astro-core/agent/playbooks/change-request.md."
+            echo "Follow node_modules/@agency-manager/astro-core/agent/AGENTS.md and node_modules/@agency-manager/astro-core/agent/playbooks/change-request.md."
             echo
             echo "## Request (issue #${{ inputs.issue_number }})"
             jq -r '"### " + .title + "\n\n" + (.body // "")' issue.json

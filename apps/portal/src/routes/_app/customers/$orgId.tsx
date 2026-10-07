@@ -1,8 +1,8 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useMutation, useQuery } from "convex/react";
 import { toast } from "sonner";
-import { api } from "@agency/backend/api";
-import type { Id } from "@agency/backend/dataModel";
+import { api } from "@agency-manager/backend/api";
+import type { Id } from "@agency-manager/backend/dataModel";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";

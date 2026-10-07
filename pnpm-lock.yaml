@@ -48,7 +48,7 @@ importers:
 
   apps/portal:
     dependencies:
-      '@agency/backend':
+      '@agency-manager/backend':
         specifier: workspace:*
         version: link:../../packages/backend
       '@convex-dev/better-auth':
@@ -127,10 +127,10 @@ importers:
 
   examples/lemus-dental:
     dependencies:
-      '@agency/astro-core':
+      '@agency-manager/astro-core':
         specifier: workspace:^
         version: link:../../packages/astro-core
-      '@agency/site-schema':
+      '@agency-manager/site-schema':
         specifier: workspace:^
         version: link:../../packages/site-schema
       astro:
@@ -143,10 +143,10 @@ importers:
 
   examples/xentryx:
     dependencies:
-      '@agency/astro-core':
+      '@agency-manager/astro-core':
         specifier: workspace:^
         version: link:../../packages/astro-core
-      '@agency/site-schema':
+      '@agency-manager/site-schema':
         specifier: workspace:^
         version: link:../../packages/site-schema
       astro:
@@ -159,7 +159,7 @@ importers:
 
   packages/astro-core:
     dependencies:
-      '@agency/site-schema':
+      '@agency-manager/site-schema':
         specifier: workspace:^
         version: link:../site-schema
       yaml:
@@ -231,10 +231,10 @@ importers:
 
   templates/site-starter:
     dependencies:
-      '@agency/astro-core':
+      '@agency-manager/astro-core':
         specifier: workspace:^
         version: link:../../packages/astro-core
-      '@agency/site-schema':
+      '@agency-manager/site-schema':
         specifier: workspace:^
         version: link:../../packages/site-schema
       astro:

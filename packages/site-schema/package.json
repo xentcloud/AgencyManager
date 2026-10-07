@@ -1,5 +1,5 @@
 {
-  "name": "@agency/site-schema",
+  "name": "@agency-manager/site-schema",
   "version": "0.1.0",
   "description": "Zod schemas for agency site config and content collections.",
   "license": "MIT",

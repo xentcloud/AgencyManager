@@ -66,7 +66,7 @@ export default defineSchema({
     repo: v.optional(v.string()), // owner/name
     workerName: v.optional(v.string()),
     productionUrl: v.optional(v.string()),
-    coreVersion: v.optional(v.string()), // @agency/astro-core version on main
+    coreVersion: v.optional(v.string()), // @agency-manager/astro-core version on main
     notifyEmail: v.optional(v.string()), // where contact-form submissions are sent
     status: v.union(v.literal("draft"), v.literal("building"), v.literal("live"), v.literal("paused"), v.literal("archived")),
   })

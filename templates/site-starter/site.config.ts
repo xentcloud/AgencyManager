@@ -1,4 +1,4 @@
-import { defineSiteConfig } from "@agency/astro-core";
+import { defineSiteConfig } from "@agency-manager/astro-core";
 
 export default defineSiteConfig({
   id: "demo-dental",

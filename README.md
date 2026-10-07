@@ -19,7 +19,7 @@ Astro sites on Cloudflare, AI-agent change requests through GitHub Issues, prosp
 ## Customer sites are content-as-data
 A customer repo contains only `site.config.ts`, `src/content/*.yaml`, images and a one-line `astro.config.mjs`.
 Changing hours, services, team or FAQs is a YAML edit that `agency-validate` checks against the schema.
-Layout, footer credit and analytics come from `@agency/astro-core`, so a version bump updates every site.
+Layout, footer credit and analytics come from `@agency-manager/astro-core`, so a version bump updates every site.
 
 ## Develop
 ```bash

@@ -1,4 +1,4 @@
-import type { Hours } from "@agency/site-schema";
+import type { Hours } from "@agency-manager/site-schema";
 
 export const dayNames = {
   mon: "Monday", tue: "Tuesday", wed: "Wednesday", thu: "Thursday",

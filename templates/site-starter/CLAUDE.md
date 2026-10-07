@@ -1,2 +1,2 @@
-@node_modules/@agency/astro-core/agent/AGENTS.md
+@node_modules/@agency-manager/astro-core/agent/AGENTS.md
 @AGENTS.md

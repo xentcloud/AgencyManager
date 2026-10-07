@@ -10,8 +10,8 @@
     "deploy": "wrangler deploy"
   },
   "dependencies": {
-    "@agency/astro-core": "workspace:^",
-    "@agency/site-schema": "workspace:^",
+    "@agency-manager/astro-core": "workspace:^",
+    "@agency-manager/site-schema": "workspace:^",
     "astro": "^7.3.6"
   },
   "devDependencies": {

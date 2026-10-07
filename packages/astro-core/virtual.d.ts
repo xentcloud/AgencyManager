@@ -1,7 +1,7 @@
 declare module "virtual:agency/site" {
   import type {
     Business, CaseStudy, Faq, GalleryItem, Hours, Service, SiteConfig, StackGroup, TeamMember, Testimonial,
-  } from "@agency/site-schema";
+  } from "@agency-manager/site-schema";
   export const config: SiteConfig;
   export const credit: { name: string; url: string };
   export const business: Business;

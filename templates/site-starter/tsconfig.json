@@ -1,4 +1,4 @@
 {
   "extends": "astro/tsconfigs/strict",
-  "compilerOptions": { "types": ["@agency/astro-core/virtual"] }
+  "compilerOptions": { "types": ["@agency-manager/astro-core/virtual"] }
 }

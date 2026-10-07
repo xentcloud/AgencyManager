@@ -1,5 +1,5 @@
 {
-  "name": "@agency/astro-core",
+  "name": "@agency-manager/astro-core",
   "version": "0.1.0",
   "description": "Shared Astro integration for agency client sites: layouts, sections, SEO, analytics and agency credit.",
   "license": "MIT",
@@ -30,7 +30,7 @@
     "typecheck": "tsc -p tsconfig.json --noEmit"
   },
   "dependencies": {
-    "@agency/site-schema": "workspace:^",
+    "@agency-manager/site-schema": "workspace:^",
     "yaml": "^2.9.1"
   },
   "peerDependencies": {

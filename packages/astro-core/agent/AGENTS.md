@@ -1,14 +1,14 @@
 # Agent rules for agency client sites
 
-You are editing one small-business website built on `@agency/astro-core`.
+You are editing one small-business website built on `@agency-manager/astro-core`.
 These rules are shared by every client site; the repo's own `AGENTS.md` adds site-specific notes.
 
 ## How this repo works
 - All business facts live in `src/content/*.yaml` (business, hours, services, team, testimonials, gallery, faq).
-  Their schema is in `node_modules/@agency/site-schema/dist/content.d.ts`.
+  Their schema is in `node_modules/@agency-manager/site-schema/dist/content.d.ts`.
 - `site.config.ts` controls theme colors/preset and which sections appear on the home page, in order.
 - Images live in `public/images/` and are referenced as `/images/<file>`. Every image needs meaningful `alt` text.
-- Layout, header, footer, SEO and analytics come from `@agency/astro-core`. **Never** copy or fork them into this repo.
+- Layout, header, footer, SEO and analytics come from `@agency-manager/astro-core`. **Never** copy or fork them into this repo.
   If a request truly needs custom markup, put it in `src/overrides/` and explain why in the PR.
 
 ## Rules

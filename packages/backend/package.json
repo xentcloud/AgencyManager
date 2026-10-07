@@ -1,5 +1,5 @@
 {
-  "name": "@agency/backend",
+  "name": "@agency-manager/backend",
   "private": true,
   "type": "module",
   "exports": {
