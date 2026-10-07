@@ -142,6 +142,7 @@ export default defineSchema({
     body: v.string(),
     state: changeRequestState,
     tier: v.union(v.literal("content"), v.literal("code")),
+    kind: v.optional(v.union(v.literal("change"), v.literal("migrate"))), // default "change"
     agent: v.union(v.literal("claude"), v.literal("codex")),
     replyToken: v.string(), // per-request token so replies map to the right request
     issueNumber: v.optional(v.number()),

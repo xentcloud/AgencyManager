@@ -24,12 +24,14 @@ export const create = mutation({
     summary: v.string(),
     body: v.string(),
     agent: v.optional(v.union(v.literal("claude"), v.literal("codex"))),
+    kind: v.optional(v.union(v.literal("change"), v.literal("migrate"))),
   },
   handler: async (ctx, args) => {
     const site = await ctx.db.get(args.siteId);
     if (!site) throw new ConvexError("Site not found");
     const viewer = await requireOrgAccess(ctx, site.orgId);
     if (!site.repo) throw new ConvexError("This site isn't connected to a repository yet");
+    if (args.kind === "migrate" && !viewer.isAgency) throw new ConvexError("Migrations are started by the agency");
     const summary = args.summary.trim().slice(0, 120);
     if (!summary) throw new ConvexError("Summary is required");
     // TODO(phase 6): enforce the plan's monthly request quota here, before any agent runs.
@@ -41,6 +43,7 @@ export const create = mutation({
       body: args.body.trim(),
       state: "received",
       tier: "content",
+      kind: args.kind ?? "change",
       agent: args.agent ?? "claude",
       replyToken: newReplyToken(),
       iterations: 0,

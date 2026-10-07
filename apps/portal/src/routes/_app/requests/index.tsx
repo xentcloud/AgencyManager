@@ -23,6 +23,7 @@ function NewRequest() {
   const [open, setOpen] = useState(false);
   const [siteId, setSiteId] = useState<string>();
   const [agent, setAgent] = useState<"claude" | "codex">("claude");
+  const [kind, setKind] = useState<"change" | "migrate">("change");
   const [pending, setPending] = useState(false);
 
   async function onSubmit(e: React.FormEvent<HTMLFormElement>) {
@@ -36,6 +37,7 @@ function NewRequest() {
         summary: String(form.get("summary")),
         body: String(form.get("body")),
         agent,
+        kind,
       });
       setOpen(false);
       navigate({ to: "/requests/$id", params: { id } });
@@ -72,6 +74,18 @@ function NewRequest() {
             <Label htmlFor="body">Details</Label>
             <Textarea id="body" name="body" rows={5} placeholder="We're now open Saturdays 9am–1pm starting next week." />
           </div>
+          {me?.isAgency && (
+            <div className="grid gap-2">
+              <Label>Type</Label>
+              <Select value={kind} onValueChange={(v) => setKind(v as "change" | "migrate")}>
+                <SelectTrigger><SelectValue /></SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="change">Change request</SelectItem>
+                  <SelectItem value="migrate">Migration from an existing site (put its URL in Details)</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+          )}
           {me?.isAgency && (
             <div className="grid gap-2">
               <Label>Agent</Label>

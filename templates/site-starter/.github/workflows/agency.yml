@@ -17,11 +17,11 @@ on:
 
 jobs:
   agent:
-    # Start when the portal labels an issue `type:change`, or revise when it posts `/revise <feedback>`.
+    # Start when the portal labels an issue `type:change` or `type:migrate`, or revise when it posts `/revise <feedback>`.
     # Contract: the portal posts `/revise <feedback>` on the ISSUE (never the PR).
     # Only the portal's GitHub App posts `/revise`, so customers and strangers can't trigger agent runs.
     if: >-
-      (github.event_name == 'issues' && github.event.label.name == 'type:change') ||
+      (github.event_name == 'issues' && (github.event.label.name == 'type:change' || github.event.label.name == 'type:migrate')) ||
       (github.event_name == 'issue_comment' && !github.event.issue.pull_request &&
        github.event.comment.user.type == 'Bot' &&
        startsWith(github.event.comment.body, '/revise'))

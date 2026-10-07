@@ -69,7 +69,7 @@ export const createIssue = internalAction({
     const issue = await gh<{ number: number; html_url: string }>("POST", `/repos/${cr.repo}/issues`, {
       title: cr.summary,
       body: `${cr.body}\n\n---\nSource: ${cr.source} · Request \`${cr.replyToken}\` · Opened by the agency portal.`,
-      labels: ["type:change", `agent:${cr.agent}`],
+      labels: [cr.kind === "migrate" ? "type:migrate" : "type:change", `agent:${cr.agent}`],
     });
     await ctx.runMutation(internal.changeRequests.markQueued, { changeRequestId, issueNumber: issue.number });
   },
@@ -109,6 +109,7 @@ export const check = internalAction({
 
 const SITE_LABELS: [string, string, string][] = [
   ["type:change", "1d76db", "Customer change request"],
+  ["type:migrate", "0e8a16", "Migrate/modernize content from an existing site"],
   ["agent:claude", "d97706", "Handled by Claude Code"],
   ["agent:codex", "10a37f", "Handled by Codex"],
   ["tier:content", "c2e0c6", "Content/data-only change"],
