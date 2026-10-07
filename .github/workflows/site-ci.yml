@@ -3,10 +3,16 @@ name: site-ci
 
 on:
   workflow_call:
+    inputs:
+      runner:
+        description: 'JSON runs-on value, e.g. ["self-hosted","Linux","dokploy-linux"]'
+        type: string
+        required: false
+        default: '"ubuntu-latest"'
 
 jobs:
   build:
-    runs-on: ubuntu-latest
+    runs-on: ${{ fromJSON(inputs.runner) }}
     timeout-minutes: 10
     permissions: { contents: read }
     steps:

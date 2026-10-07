@@ -4,6 +4,12 @@ name: site-preview
 
 on:
   workflow_call:
+    inputs:
+      runner:
+        description: 'JSON runs-on value, e.g. ["self-hosted","Linux","dokploy-linux"]'
+        type: string
+        required: false
+        default: '"ubuntu-latest"'
     secrets:
       # Optional at startup so a missing token can't invalidate the caller's other jobs; checked below.
       CLOUDFLARE_API_TOKEN: { required: false }
@@ -11,7 +17,7 @@ on:
 
 jobs:
   preview:
-    runs-on: ubuntu-latest
+    runs-on: ${{ fromJSON(inputs.runner) }}
     timeout-minutes: 15
     permissions:
       contents: read

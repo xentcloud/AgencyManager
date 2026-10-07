@@ -1,6 +1,7 @@
 # Thin caller: all logic lives in the agency's reusable workflows, so CI changes ship from one place.
 name: agency
 
+# Runner: org/repo variable AGENCY_RUNNER (JSON runs-on), e.g. ["self-hosted","Linux","dokploy-linux"].
 # The org default token is read-only; each job grants exactly what its reusable workflow needs.
 permissions: {}
 
@@ -28,6 +29,7 @@ jobs:
       contents: read
     uses: xentcloud/AgencyManager/.github/workflows/site-agent.yml@v1
     with:
+      runner: ${{ vars.AGENCY_RUNNER || '"ubuntu-latest"' }}
       issue_number: ${{ github.event.issue.number }}
       feedback: ${{ github.event_name == 'issue_comment' && github.event.comment.body || '' }}
     # Explicit: the agent job never receives Cloudflare credentials.
@@ -42,6 +44,8 @@ jobs:
     permissions:
       contents: read
     uses: xentcloud/AgencyManager/.github/workflows/site-ci.yml@v1
+    with:
+      runner: ${{ vars.AGENCY_RUNNER || '"ubuntu-latest"' }}
 
   preview:
     if: github.event_name == 'pull_request'
@@ -51,6 +55,8 @@ jobs:
       deployments: write
       pull-requests: write
     uses: xentcloud/AgencyManager/.github/workflows/site-preview.yml@v1
+    with:
+      runner: ${{ vars.AGENCY_RUNNER || '"ubuntu-latest"' }}
     secrets:
       CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
       CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
@@ -61,6 +67,8 @@ jobs:
       contents: read
       deployments: write
     uses: xentcloud/AgencyManager/.github/workflows/site-deploy.yml@v1
+    with:
+      runner: ${{ vars.AGENCY_RUNNER || '"ubuntu-latest"' }}
     secrets:
       CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
       CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}

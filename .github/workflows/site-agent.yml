@@ -7,6 +7,11 @@ name: site-agent
 on:
   workflow_call:
     inputs:
+      runner:
+        description: 'JSON runs-on value, e.g. ["self-hosted","Linux","dokploy-linux"]'
+        type: string
+        required: false
+        default: '"ubuntu-latest"'
       issue_number: { type: number, required: true }
       feedback: { type: string, required: false, default: "" }
     secrets:
@@ -21,7 +26,7 @@ concurrency:
 
 jobs:
   agent:
-    runs-on: ubuntu-latest
+    runs-on: ${{ fromJSON(inputs.runner) }}
     timeout-minutes: 30
     permissions:
       contents: read
@@ -37,8 +42,8 @@ jobs:
           GH_TOKEN: ${{ steps.app.outputs.token }}
           N: ${{ inputs.issue_number }}
         run: |
-          gh api repos/$GITHUB_REPOSITORY/issues/$N > issue.json
-          labels=$(jq -r '[.labels[].name] | join(",")' issue.json)
+          gh api repos/$GITHUB_REPOSITORY/issues/$N > "$RUNNER_TEMP/issue.json"
+          labels=$(jq -r '[.labels[].name] | join(",")' "$RUNNER_TEMP/issue.json")
           if [[ ",$labels," == *",agent:codex,"* ]]; then echo "agent=codex" >> $GITHUB_OUTPUT; else echo "agent=claude" >> $GITHUB_OUTPUT; fi
           echo "branch=agent/issue-$N" >> $GITHUB_OUTPUT
 
@@ -76,13 +81,13 @@ jobs:
             echo "Follow node_modules/@agency-manager/astro-core/agent/AGENTS.md and node_modules/@agency-manager/astro-core/agent/playbooks/change-request.md."
             echo
             echo "## Request (issue #${{ inputs.issue_number }})"
-            jq -r '"### " + .title + "\n\n" + (.body // "")' issue.json
+            jq -r '"### " + .title + "\n\n" + (.body // "")' "$RUNNER_TEMP/issue.json"
             if [ -n "$FEEDBACK" ]; then
               echo; echo "## Customer feedback on the current preview (apply this now)"; echo "$FEEDBACK"
             fi
-          } > /tmp/agent-prompt.md
+          } > "$RUNNER_TEMP/agent-prompt.md"
           delim="EOF_$(openssl rand -hex 8)"
-          { echo "text<<$delim"; cat /tmp/agent-prompt.md; echo "$delim"; } >> $GITHUB_OUTPUT
+          { echo "text<<$delim"; cat "$RUNNER_TEMP/agent-prompt.md"; echo "$delim"; } >> $GITHUB_OUTPUT
 
       - name: Run Claude Code
         if: steps.issue.outputs.agent == 'claude'
@@ -101,8 +106,8 @@ jobs:
         uses: openai/codex-action@v1
         with:
           openai-api-key: ${{ secrets.OPENAI_API_KEY }}
-          prompt-file: /tmp/agent-prompt.md
-          output-file: /tmp/agent-summary.md
+          prompt-file: ${{ runner.temp }}/agent-prompt.md
+          output-file: ${{ runner.temp }}/agent-summary.md
           sandbox: workspace-write
 
       - name: Agent asked a question?
@@ -143,13 +148,13 @@ jobs:
             gh issue edit "$N" --add-label needs-human
             exit 0
           fi
-          git commit -m "$(jq -r .title issue.json) (#$N)"
+          git commit -m "$(jq -r .title "$RUNNER_TEMP/issue.json") (#$N)"
           git push "https://x-access-token:${GH_TOKEN}@github.com/${GITHUB_REPOSITORY}.git" "$BRANCH"
-          summary=$(cat /tmp/agent-summary.md 2>/dev/null || echo "Automated change for #$N.")
+          summary=$(cat "$RUNNER_TEMP/agent-summary.md" 2>/dev/null || echo "Automated change for #$N.")
           if pr=$(gh pr view "$BRANCH" --json number -q .number 2>/dev/null); then
             gh pr comment "$pr" --body "Updated after feedback."$'\n\n'"$summary"
           else
-            gh pr create --head "$BRANCH" --title "$(jq -r .title issue.json)" \
+            gh pr create --head "$BRANCH" --title "$(jq -r .title "$RUNNER_TEMP/issue.json")" \
               --body "$summary"$'\n\n'"Closes #$N" --label "agent:${{ steps.issue.outputs.agent }}" --label "tier:$TIER"
           fi
 
