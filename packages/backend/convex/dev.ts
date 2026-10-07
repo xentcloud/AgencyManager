@@ -17,3 +17,11 @@ export const seedSite = internalMutation({
     });
   },
 });
+
+/** Ops cleanup: delete a deployment record (e.g. an accidental deploy). Not callable from clients. */
+export const removeDeployment = internalMutation({
+  args: { id: v.id("deployments") },
+  handler: async (ctx, { id }) => {
+    await ctx.db.delete(id);
+  },
+});
