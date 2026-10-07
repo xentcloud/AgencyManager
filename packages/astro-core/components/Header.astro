@@ -1,0 +1,17 @@
+---
+import { business, services } from "virtual:agency/site";
+import { displayPhone, telHref } from "./format";
+---
+<header class="site-header">
+  <div class="container bar">
+    <a class="brand" href="/">
+      {business.logo ? <img src={business.logo.src} alt={business.logo.alt} height="40" /> : business.name}
+    </a>
+    <nav aria-label="Main">
+      {services.length > 0 && <a href="/#services">Services</a>}
+      <a href="/#hours">Hours</a>
+      <a href="/contact">Contact</a>
+      <a class="btn btn-sm" href={telHref(business.phone)}>{displayPhone(business.phone)}</a>
+    </nav>
+  </div>
+</header>

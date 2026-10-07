@@ -1,0 +1,11 @@
+---
+import { business } from "virtual:agency/site";
+---
+{business.about && (
+  <section id="about" class="section alt">
+    <div class="container prose">
+      <h2>About {business.name}</h2>
+      {business.about.split(/\n{2,}/).map((p) => <p>{p}</p>)}
+    </div>
+  </section>
+)}

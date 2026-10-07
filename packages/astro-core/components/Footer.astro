@@ -1,0 +1,27 @@
+---
+import { business, credit } from "virtual:agency/site";
+import { displayPhone, telHref } from "./format";
+const year = new Date().getFullYear();
+const a = business.address;
+---
+<footer class="site-footer">
+  <div class="container cols">
+    <div>
+      <strong>{business.name}</strong>
+      <address>{a.street}<br />{a.city}, {a.region} {a.postalCode}</address>
+      <a href={telHref(business.phone)}>{displayPhone(business.phone)}</a>
+      {business.email && <><br /><a href={`mailto:${business.email}`}>{business.email}</a></>}
+    </div>
+    {Object.keys(business.social).length > 0 && (
+      <ul class="social" aria-label="Social links">
+        {Object.entries(business.social).map(([name, url]) => (
+          <li><a href={url} rel="noopener" target="_blank">{name}</a></li>
+        ))}
+      </ul>
+    )}
+  </div>
+  <div class="container legal">
+    <span>© {year} {business.name}</span>
+    <span class="credit">Website by <a href={credit.url} rel="noopener">{credit.name}</a></span>
+  </div>
+</footer>

@@ -1,0 +1,19 @@
+---
+import { testimonials } from "virtual:agency/site";
+---
+{testimonials.length > 0 && (
+  <section id="testimonials" class="section alt">
+    <div class="container">
+      <h2>What our customers say</h2>
+      <ul class="cards">
+        {testimonials.map((t) => (
+          <li class="card quote">
+            {t.rating && <p class="stars" aria-label={`${t.rating} out of 5 stars`}>{"★".repeat(t.rating)}{"☆".repeat(5 - t.rating)}</p>}
+            <blockquote>“{t.quote}”</blockquote>
+            <p class="muted">— {t.author}{t.source && `, ${t.source}`}</p>
+          </li>
+        ))}
+      </ul>
+    </div>
+  </section>
+)}

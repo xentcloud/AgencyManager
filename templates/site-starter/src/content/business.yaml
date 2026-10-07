@@ -1,0 +1,23 @@
+name: Bright Smile Dental
+tagline: Family dentistry in South Austin
+description: Gentle, modern family dentistry in South Austin. Cleanings, whitening, implants and emergency care.
+schemaType: Dentist
+phone: "+15125550100"
+email: hello@demo-dental.example.com
+address:
+  street: 1200 S Congress Ave, Suite 100
+  city: Austin
+  region: TX
+  postalCode: "78704"
+serviceArea: [Austin, Travis Heights, Zilker]
+hero:
+  heading: Healthy smiles for the whole family
+  subheading: New patients welcome. Most insurance accepted.
+  cta: { label: Book an appointment, href: /contact }
+about: |
+  Bright Smile Dental has cared for South Austin families since 2009.
+
+  Our team combines modern technology with a calm, friendly office so every visit is easy.
+social:
+  facebook: https://facebook.com/example
+  google: https://g.page/example

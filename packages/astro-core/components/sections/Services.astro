@@ -1,0 +1,21 @@
+---
+import { services } from "virtual:agency/site";
+const sorted = [...services].sort((a, b) => Number(b.featured) - Number(a.featured));
+---
+{sorted.length > 0 && (
+  <section id="services" class="section">
+    <div class="container">
+      <h2>Our services</h2>
+      <ul class="cards">
+        {sorted.map((s) => (
+          <li class="card">
+            {s.image && <img src={s.image.src} alt={s.image.alt} loading="lazy" />}
+            <h3><a href={`/services/${s.id}`}>{s.title}</a></h3>
+            <p>{s.summary}</p>
+            {s.price && <p class="price">{s.price}</p>}
+          </li>
+        ))}
+      </ul>
+    </div>
+  </section>
+)}

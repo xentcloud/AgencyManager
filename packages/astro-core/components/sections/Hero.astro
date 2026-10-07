@@ -1,0 +1,16 @@
+---
+import { business } from "virtual:agency/site";
+import { displayPhone, telHref } from "../format";
+const hero = business.hero ?? { heading: business.name, subheading: business.tagline };
+const cta = hero.cta ?? { label: "Contact us", href: "/contact" };
+---
+<section class="hero" style={hero.image ? `--hero-img:url('${hero.image.src}')` : undefined} data-has-image={!!hero.image}>
+  <div class="container">
+    <h1>{hero.heading}</h1>
+    {hero.subheading && <p class="lead">{hero.subheading}</p>}
+    <div class="actions">
+      <a class="btn" href={cta.href}>{cta.label}</a>
+      <a class="btn btn-ghost" href={telHref(business.phone)}>Call {displayPhone(business.phone)}</a>
+    </div>
+  </div>
+</section>

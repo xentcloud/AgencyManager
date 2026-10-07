@@ -1,0 +1,23 @@
+---
+import { services } from "virtual:agency/site";
+import Layout from "../../components/Layout.astro";
+import Contact from "../../components/sections/Contact.astro";
+
+export function getStaticPaths() {
+  return services.map((service) => ({ params: { id: service.id }, props: { service } }));
+}
+const { service } = Astro.props;
+---
+<Layout title={service.title} description={service.summary}>
+  <article class="section">
+    <div class="container prose">
+      <p><a href="/#services">← All services</a></p>
+      <h1>{service.title}</h1>
+      {service.image && <img src={service.image.src} alt={service.image.alt} />}
+      <p class="lead">{service.summary}</p>
+      {service.description?.split(/\n{2,}/).map((p) => <p>{p}</p>)}
+      {service.price && <p class="price">{service.price}</p>}
+    </div>
+  </article>
+  <Contact />
+</Layout>

@@ -1,0 +1,15 @@
+---
+import { gallery } from "virtual:agency/site";
+---
+{gallery.length > 0 && (
+  <section id="gallery" class="section alt">
+    <div class="container">
+      <h2>Gallery</h2>
+      <ul class="gallery">
+        {gallery.map((g) => (
+          <li><figure><img src={g.src} alt={g.alt} loading="lazy" />{g.caption && <figcaption>{g.caption}</figcaption>}</figure></li>
+        ))}
+      </ul>
+    </div>
+  </section>
+)}

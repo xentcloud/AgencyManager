@@ -1,0 +1,11 @@
+timezone: America/Chicago
+weekly:
+  mon: [{ open: "08:00", close: "17:00" }]
+  tue: [{ open: "08:00", close: "17:00" }]
+  wed: [{ open: "08:00", close: "17:00" }]
+  thu: [{ open: "08:00", close: "17:00" }]
+  fri: [{ open: "08:00", close: "14:00" }]
+  sat: [{ open: "09:00", close: "13:00" }]
+  sun: []
+exceptions:
+  - { date: "2026-12-25", ranges: [], note: Christmas Day }

@@ -1,0 +1,11 @@
+---
+import { faq } from "virtual:agency/site";
+---
+{faq.length > 0 && (
+  <section id="faq" class="section">
+    <div class="container prose">
+      <h2>Frequently asked questions</h2>
+      {faq.map((f) => (<details><summary>{f.question}</summary><p>{f.answer}</p></details>))}
+    </div>
+  </section>
+)}

@@ -1,0 +1,11 @@
+node_modules
+dist
+.turbo
+.astro
+.wrangler
+.env
+.env.local
+.dev.vars
+*.log
+.DS_Store
+infra/convex/data

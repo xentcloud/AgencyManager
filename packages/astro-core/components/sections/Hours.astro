@@ -1,0 +1,24 @@
+---
+import { hours } from "virtual:agency/site";
+import { dayNames, formatRanges } from "../format";
+const today = new Date().toISOString().slice(0, 10);
+const upcoming = hours.exceptions.filter((e) => e.date >= today).slice(0, 5);
+---
+<section id="hours" class="section">
+  <div class="container">
+    <h2>Hours</h2>
+    <table class="hours">
+      <tbody>
+        {Object.entries(dayNames).map(([key, name]) => (
+          <tr><th scope="row">{name}</th><td>{formatRanges(hours.weekly[key as keyof typeof dayNames])}</td></tr>
+        ))}
+      </tbody>
+    </table>
+    {upcoming.length > 0 && (
+      <ul class="exceptions">
+        {upcoming.map((e) => <li><strong>{e.date}</strong>: {formatRanges(e.ranges)}{e.note && ` — ${e.note}`}</li>)}
+      </ul>
+    )}
+    {hours.note && <p class="muted">{hours.note}</p>}
+  </div>
+</section>

@@ -1,0 +1,15 @@
+- id: cleanings
+  title: Cleanings & Exams
+  summary: Thorough cleanings and checkups to keep your smile healthy.
+  featured: true
+- id: whitening
+  title: Teeth Whitening
+  summary: In-office and take-home whitening for a brighter smile.
+- id: implants
+  title: Dental Implants
+  summary: Permanent, natural-looking replacements for missing teeth.
+- id: emergency
+  title: Emergency Care
+  summary: Same-day appointments for toothaches and broken teeth.
+  description: |
+    Call us as early as possible and we will fit you in the same day.

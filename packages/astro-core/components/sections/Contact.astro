@@ -1,0 +1,31 @@
+---
+import { business, config } from "virtual:agency/site";
+import { displayPhone, telHref } from "../format";
+const a = business.address;
+const mapQuery = encodeURIComponent(`${business.name}, ${a.street}, ${a.city}, ${a.region} ${a.postalCode}`);
+const { endpoint, turnstileSiteKey } = config.forms;
+---
+<section id="contact" class="section alt">
+  <div class="container cols">
+    <div>
+      <h2>Get in touch</h2>
+      <p><a href={telHref(business.phone)}>{displayPhone(business.phone)}</a></p>
+      {business.email && <p><a href={`mailto:${business.email}`}>{business.email}</a></p>}
+      <address>{a.street}<br />{a.city}, {a.region} {a.postalCode}</address>
+      <p><a href={`https://www.google.com/maps/search/?api=1&query=${mapQuery}`} rel="noopener" target="_blank">Get directions</a></p>
+    </div>
+    {endpoint ? (
+      <form class="contact-form" method="post" action={endpoint}>
+        <input type="hidden" name="siteId" value={config.id} />
+        <label>Name <input name="name" required autocomplete="name" /></label>
+        <label>Email <input name="email" type="email" required autocomplete="email" /></label>
+        <label>Phone <input name="phone" type="tel" autocomplete="tel" /></label>
+        <label>Message <textarea name="message" rows="5" required></textarea></label>
+        <input type="text" name="company_website" tabindex="-1" autocomplete="off" class="hp" aria-hidden="true" />
+        {turnstileSiteKey && <div class="cf-turnstile" data-sitekey={turnstileSiteKey}></div>}
+        <button class="btn" type="submit">Send message</button>
+      </form>
+    ) : null}
+  </div>
+  {turnstileSiteKey && <script is:inline src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>}
+</section>
