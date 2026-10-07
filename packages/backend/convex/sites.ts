@@ -85,8 +85,10 @@ export const provisionRepo = mutation({
     const viewer = await requireAgency(ctx);
     const site = await ctx.db.get(siteId);
     if (!site) throw new ConvexError("Site not found");
-    if (site.repo) throw new ConvexError(`Already connected to ${site.repo}`);
-    if (site.status === "building") throw new ConvexError("Repository is already being created");
+    const suggested = `${process.env.GITHUB_ORG ?? "xentcloud"}/site-${site.slug}`;
+    // A manually entered suggested name (not yet created) can still be provisioned; other repos can't.
+    if (site.repo && site.repo !== suggested) throw new ConvexError(`Already connected to ${site.repo}`);
+    if (site.status !== "draft") throw new ConvexError("This site is already set up");
     await ctx.db.patch(siteId, { status: "building", provisionError: undefined });
     await ctx.db.insert("auditLog", { actor: viewer.userId, action: "site.provision", target: siteId });
     await ctx.scheduler.runAfter(0, internal.github.app.provisionSite, { siteId });

@@ -67,13 +67,13 @@ function Customer() {
                 </div>
                 <Badge>{s.status}</Badge>
               </div>
-              {!s.repo && (
+              {s.status !== "live" && (!s.repo || s.repo === s.suggestedRepo) && (
                 <div className="flex flex-wrap items-center gap-3">
                   <Button size="sm" disabled={s.status === "building"}
                     onClick={() => provision({ siteId: s._id }).then(() => toast.success(`Creating ${s.suggestedRepo}…`), (err) => toast.error((err as Error).message))}>
                     {s.status === "building" ? "Creating repository…" : `Create ${s.suggestedRepo}`}
                   </Button>
-                  <span className="text-sm text-muted-foreground">or connect an existing repo below</span>
+                  <span className="text-sm text-muted-foreground">creates the repo from the template and deploys it — or connect an existing repo below</span>
                 </div>
               )}
               {s.provisionError && <p className="text-sm text-destructive">{s.provisionError}</p>}
