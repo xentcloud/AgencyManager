@@ -52,6 +52,20 @@
         "4323"
       ],
       "port": 4323
+    },
+    {
+      "name": "app-manifest",
+      "runtimeExecutable": "python3",
+      "runtimeArgs": [
+        "-m",
+        "http.server",
+        "5555",
+        "--bind",
+        "127.0.0.1",
+        "--directory",
+        "/private/tmp/claude-502/-Users-raulruiz-Dev-AgencyManager/1b47e782-4d12-4f88-af5f-e779f89d90f8/scratchpad/manifest-admin"
+      ],
+      "port": 5555
     }
   ]
 }

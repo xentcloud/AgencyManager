@@ -68,6 +68,7 @@ export default defineSchema({
     productionUrl: v.optional(v.string()),
     coreVersion: v.optional(v.string()), // @agency-manager/astro-core version on main
     notifyEmail: v.optional(v.string()), // where contact-form submissions are sent
+    provisionError: v.optional(v.string()),
     status: v.union(v.literal("draft"), v.literal("building"), v.literal("live"), v.literal("paused"), v.literal("archived")),
   })
     .index("by_org", ["orgId"])
@@ -148,6 +149,7 @@ export default defineSchema({
     previewUrl: v.optional(v.string()),
     iterations: v.number(),
     requestedBy: v.optional(v.string()),
+    lastError: v.optional(v.string()),
   })
     .index("by_site", ["siteId"])
     .index("by_org", ["orgId"])
@@ -245,5 +247,5 @@ export default defineSchema({
     action: v.string(),
     target: v.optional(v.string()),
     data: v.optional(v.any()),
-  }),
+  }).index("by_target", ["target"]),
 });

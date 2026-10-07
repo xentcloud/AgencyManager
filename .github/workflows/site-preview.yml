@@ -57,10 +57,11 @@ jobs:
         env:
           GH_TOKEN: ${{ github.token }}
           URL: ${{ steps.upload.outputs.url }}
-          SHA: ${{ github.event.pull_request.head.sha }}
+          HEAD_REF: ${{ github.event.pull_request.head.ref }}
           PR: ${{ github.event.pull_request.number }}
         run: |
-          id=$(echo '{"ref":"'$SHA'","environment":"preview","auto_merge":false,"required_contexts":[],"transient_environment":true}' \
+          # ref = PR branch (agent/issue-<n>) so the portal can map this deployment to its change request.
+          id=$(echo '{"ref":"'$HEAD_REF'","environment":"preview","auto_merge":false,"required_contexts":[],"transient_environment":true}' \
             | gh api repos/$GITHUB_REPOSITORY/deployments --input - --jq .id)
           gh api repos/$GITHUB_REPOSITORY/deployments/$id/statuses -f state=success -f environment_url="$URL" >/dev/null
           gh pr comment "$PR" --body "Preview ready: $URL" --edit-last 2>/dev/null || gh pr comment "$PR" --body "Preview ready: $URL"

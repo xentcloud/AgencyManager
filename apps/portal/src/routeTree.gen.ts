@@ -14,10 +14,11 @@ import { Route as LoginRouteImport } from './routes/login'
 import { Route as AppIndexRouteImport } from './routes/_app/index'
 import { Route as AppProspectsRouteImport } from './routes/_app/prospects'
 import { Route as AppReleasesRouteImport } from './routes/_app/releases'
-import { Route as AppRequestsRouteImport } from './routes/_app/requests'
 import { Route as AppSitesRouteImport } from './routes/_app/sites'
 import { Route as AppCustomersIndexRouteImport } from './routes/_app/customers/index'
 import { Route as AppCustomersOrgIdRouteImport } from './routes/_app/customers/$orgId'
+import { Route as AppRequestsIndexRouteImport } from './routes/_app/requests/index'
+import { Route as AppRequestsIdRouteImport } from './routes/_app/requests/$id'
 
 const AppRoute = AppRouteImport.update({
   id: '/_app',
@@ -43,11 +44,6 @@ const AppReleasesRoute = AppReleasesRouteImport.update({
   path: '/releases',
   getParentRoute: () => AppRoute,
 } as any)
-const AppRequestsRoute = AppRequestsRouteImport.update({
-  id: '/requests',
-  path: '/requests',
-  getParentRoute: () => AppRoute,
-} as any)
 const AppSitesRoute = AppSitesRouteImport.update({
   id: '/sites',
   path: '/sites',
@@ -63,26 +59,38 @@ const AppCustomersOrgIdRoute = AppCustomersOrgIdRouteImport.update({
   path: '/customers/$orgId',
   getParentRoute: () => AppRoute,
 } as any)
+const AppRequestsIndexRoute = AppRequestsIndexRouteImport.update({
+  id: '/requests/',
+  path: '/requests/',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppRequestsIdRoute = AppRequestsIdRouteImport.update({
+  id: '/requests/$id',
+  path: '/requests/$id',
+  getParentRoute: () => AppRoute,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof AppIndexRoute
   '/login': typeof LoginRoute
   '/prospects': typeof AppProspectsRoute
   '/releases': typeof AppReleasesRoute
-  '/requests': typeof AppRequestsRoute
   '/sites': typeof AppSitesRoute
   '/customers/$orgId': typeof AppCustomersOrgIdRoute
+  '/requests/$id': typeof AppRequestsIdRoute
   '/customers/': typeof AppCustomersIndexRoute
+  '/requests/': typeof AppRequestsIndexRoute
 }
 export interface FileRoutesByTo {
   '/login': typeof LoginRoute
   '/prospects': typeof AppProspectsRoute
   '/releases': typeof AppReleasesRoute
-  '/requests': typeof AppRequestsRoute
   '/sites': typeof AppSitesRoute
   '/': typeof AppIndexRoute
   '/customers/$orgId': typeof AppCustomersOrgIdRoute
+  '/requests/$id': typeof AppRequestsIdRoute
   '/customers': typeof AppCustomersIndexRoute
+  '/requests': typeof AppRequestsIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -90,11 +98,12 @@ export interface FileRoutesById {
   '/login': typeof LoginRoute
   '/_app/prospects': typeof AppProspectsRoute
   '/_app/releases': typeof AppReleasesRoute
-  '/_app/requests': typeof AppRequestsRoute
   '/_app/sites': typeof AppSitesRoute
   '/_app/': typeof AppIndexRoute
   '/_app/customers/$orgId': typeof AppCustomersOrgIdRoute
+  '/_app/requests/$id': typeof AppRequestsIdRoute
   '/_app/customers/': typeof AppCustomersIndexRoute
+  '/_app/requests/': typeof AppRequestsIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -103,31 +112,34 @@ export interface FileRouteTypes {
     | '/login'
     | '/prospects'
     | '/releases'
-    | '/requests'
     | '/sites'
     | '/customers/$orgId'
+    | '/requests/$id'
     | '/customers/'
+    | '/requests/'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/login'
     | '/prospects'
     | '/releases'
-    | '/requests'
     | '/sites'
     | '/'
     | '/customers/$orgId'
+    | '/requests/$id'
     | '/customers'
+    | '/requests'
   id:
     | '__root__'
     | '/_app'
     | '/login'
     | '/_app/prospects'
     | '/_app/releases'
-    | '/_app/requests'
     | '/_app/sites'
     | '/_app/'
     | '/_app/customers/$orgId'
+    | '/_app/requests/$id'
     | '/_app/customers/'
+    | '/_app/requests/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -172,13 +184,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppReleasesRouteImport
       parentRoute: typeof AppRoute
     }
-    '/_app/requests': {
-      id: '/_app/requests'
-      path: '/requests'
-      fullPath: '/requests'
-      preLoaderRoute: typeof AppRequestsRouteImport
-      parentRoute: typeof AppRoute
-    }
     '/_app/sites': {
       id: '/_app/sites'
       path: '/sites'
@@ -200,27 +205,43 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppCustomersOrgIdRouteImport
       parentRoute: typeof AppRoute
     }
+    '/_app/requests/': {
+      id: '/_app/requests/'
+      path: '/requests'
+      fullPath: '/requests/'
+      preLoaderRoute: typeof AppRequestsIndexRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/_app/requests/$id': {
+      id: '/_app/requests/$id'
+      path: '/requests/$id'
+      fullPath: '/requests/$id'
+      preLoaderRoute: typeof AppRequestsIdRouteImport
+      parentRoute: typeof AppRoute
+    }
   }
 }
 
 interface AppRouteChildren {
   AppProspectsRoute: typeof AppProspectsRoute
   AppReleasesRoute: typeof AppReleasesRoute
-  AppRequestsRoute: typeof AppRequestsRoute
   AppSitesRoute: typeof AppSitesRoute
   AppIndexRoute: typeof AppIndexRoute
   AppCustomersOrgIdRoute: typeof AppCustomersOrgIdRoute
+  AppRequestsIdRoute: typeof AppRequestsIdRoute
   AppCustomersIndexRoute: typeof AppCustomersIndexRoute
+  AppRequestsIndexRoute: typeof AppRequestsIndexRoute
 }
 
 const AppRouteChildren: AppRouteChildren = {
   AppProspectsRoute: AppProspectsRoute,
   AppReleasesRoute: AppReleasesRoute,
-  AppRequestsRoute: AppRequestsRoute,
   AppSitesRoute: AppSitesRoute,
   AppIndexRoute: AppIndexRoute,
   AppCustomersOrgIdRoute: AppCustomersOrgIdRoute,
+  AppRequestsIdRoute: AppRequestsIdRoute,
   AppCustomersIndexRoute: AppCustomersIndexRoute,
+  AppRequestsIndexRoute: AppRequestsIndexRoute,
 }
 
 const AppRouteWithChildren = AppRoute._addFileChildren(AppRouteChildren)
