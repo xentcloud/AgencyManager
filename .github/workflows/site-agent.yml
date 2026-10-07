@@ -102,6 +102,8 @@ jobs:
           anthropic_api_key: ${{ secrets.ANTHROPIC_API_KEY }}
           # Read-only job token: the agent step never holds the App token.
           github_token: ${{ github.token }}
+          # Issues and /revise comments are created by the portal's bot App; allow only that bot.
+          allowed_bots: ${{ vars.AGENCY_BOT_NAME || 'xentryx-agency-bot' }}
           prompt: ${{ steps.prompt.outputs.text }}
           claude_args: >-
             --allowedTools "${{ steps.issue.outputs.tools }}"
