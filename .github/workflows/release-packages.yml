@@ -1,0 +1,24 @@
+# Publish shared packages as GitHub Release assets when a `pkg-v<version>` tag is pushed.
+name: release-packages
+
+on:
+  push:
+    tags: ["pkg-v*"]
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v7
+      - uses: pnpm/action-setup@v6
+      - uses: actions/setup-node@v7
+        with: { node-version: 22, cache: pnpm }
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm --filter "./packages/site-schema" test
+      - name: Pack
+        run: mkdir -p out && scripts/pack-release.sh "${GITHUB_REF_NAME#pkg-v}" out
+      - name: Create release
+        env: { GH_TOKEN: "${{ github.token }}" }
+        run: gh release create "$GITHUB_REF_NAME" out/*.tgz --title "Packages ${GITHUB_REF_NAME#pkg-v}" --generate-notes
