@@ -2,9 +2,9 @@
 import { hours } from "virtual:agency/site";
 import { dayNames, formatRanges } from "../format";
 const today = new Date().toISOString().slice(0, 10);
-const upcoming = hours.exceptions.filter((e) => e.date >= today).slice(0, 5);
+const upcoming = (hours?.exceptions ?? []).filter((e) => e.date >= today).slice(0, 5);
 ---
-<section id="hours" class="section">
+{hours && <section id="hours" class="section">
   <div class="container">
     <h2>Hours</h2>
     <table class="hours">
@@ -21,4 +21,4 @@ const upcoming = hours.exceptions.filter((e) => e.date >= today).slice(0, 5);
     )}
     {hours.note && <p class="muted">{hours.note}</p>}
   </div>
-</section>
+</section>}

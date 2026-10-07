@@ -1,0 +1,21 @@
+---
+import { caseStudies } from "virtual:agency/site";
+---
+{caseStudies.length > 0 && (
+  <section id="work" class="section">
+    <div class="container">
+      <h2>Selected work</h2>
+      <ul class="cards">
+        {caseStudies.map((c) => (
+          <li class="card">
+            {c.image && <img src={c.image.src} alt={c.image.alt} loading="lazy" />}
+            <h3>{c.url ? <a href={c.url} rel="noopener" target="_blank">{c.title}</a> : c.title}</h3>
+            {c.client && <p class="muted">{c.client}</p>}
+            <p>{c.summary}</p>
+            {c.outcomes.length > 0 && <ul class="outcomes">{c.outcomes.map((o) => <li>{o}</li>)}</ul>}
+          </li>
+        ))}
+      </ul>
+    </div>
+  </section>
+)}

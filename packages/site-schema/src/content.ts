@@ -1,7 +1,14 @@
 import { z } from "zod";
 import { image, isoDate, phone, slug, time } from "./primitives.js";
 
+export const businessKinds = ["local", "professional"] as const;
+
 export const businessSchema = z.object({
+  /**
+   * `local`: storefront/service business (dentist, roofer): hours required, hours/map shown.
+   * `professional`: B2B / professional services (agency, consultancy): no hours, shows stack and work.
+   */
+  kind: z.enum(businessKinds).default("local"),
   name: z.string().min(1),
   tagline: z.string().optional(),
   description: z.string().min(1),
@@ -84,6 +91,20 @@ export const galleryItemSchema = image.extend({ id: slug, caption: z.string().op
 
 export const faqSchema = z.object({ id: slug, question: z.string(), answer: z.string() });
 
+/** Grouped skills / technologies, e.g. { title: "Cloud", items: ["AWS", "Azure"] }. */
+export const stackGroupSchema = z.object({ id: slug, title: z.string(), items: z.array(z.string()).min(1) });
+
+/** Portfolio / case study. Only real, client-approved work. */
+export const caseStudySchema = z.object({
+  id: slug,
+  title: z.string(),
+  client: z.string().optional(),
+  summary: z.string(),
+  outcomes: z.array(z.string()).default([]),
+  url: z.url().optional(),
+  image: image.optional(),
+});
+
 /**
  * Content files live in `src/content/` of each site repo.
  * Singletons are objects; the rest are arrays of items with unique `id`s.
@@ -96,9 +117,12 @@ export const contentFiles = {
   "testimonials.yaml": { kind: "list", schema: testimonialSchema },
   "gallery.yaml": { kind: "list", schema: galleryItemSchema },
   "faq.yaml": { kind: "list", schema: faqSchema },
+  "stack.yaml": { kind: "list", schema: stackGroupSchema },
+  "case-studies.yaml": { kind: "list", schema: caseStudySchema },
 } as const;
 
-export const requiredContentFiles = ["business.yaml", "hours.yaml", "services.yaml"] as const;
+/** Always required. `hours.yaml` is additionally required when `business.kind` is `local`. */
+export const requiredContentFiles = ["business.yaml", "services.yaml"] as const;
 
 export type Business = z.output<typeof businessSchema>;
 export type Hours = z.output<typeof hoursSchema>;
@@ -107,3 +131,5 @@ export type TeamMember = z.output<typeof teamMemberSchema>;
 export type Testimonial = z.output<typeof testimonialSchema>;
 export type GalleryItem = z.output<typeof galleryItemSchema>;
 export type Faq = z.output<typeof faqSchema>;
+export type StackGroup = z.output<typeof stackGroupSchema>;
+export type CaseStudy = z.output<typeof caseStudySchema>;

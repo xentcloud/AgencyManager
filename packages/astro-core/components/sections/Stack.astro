@@ -1,0 +1,18 @@
+---
+import { stack } from "virtual:agency/site";
+---
+{stack.length > 0 && (
+  <section id="stack" class="section alt">
+    <div class="container">
+      <h2>Our expertise</h2>
+      <ul class="cards">
+        {stack.map((g) => (
+          <li class="card">
+            <h3>{g.title}</h3>
+            <ul class="tags">{g.items.map((item) => <li>{item}</li>)}</ul>
+          </li>
+        ))}
+      </ul>
+    </div>
+  </section>
+)}

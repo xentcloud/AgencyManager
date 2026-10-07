@@ -38,6 +38,20 @@
         "4322"
       ],
       "port": 4322
+    },
+    {
+      "name": "xentryx",
+      "runtimeExecutable": "pnpm",
+      "runtimeArgs": [
+        "--filter",
+        "site-xentryx",
+        "exec",
+        "astro",
+        "dev",
+        "--port",
+        "4323"
+      ],
+      "port": 4323
     }
   ]
 }

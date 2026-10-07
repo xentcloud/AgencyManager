@@ -1,5 +1,5 @@
 ---
-import { business, services } from "virtual:agency/site";
+import { business, caseStudies, hours, services } from "virtual:agency/site";
 import { displayPhone, telHref } from "./format";
 ---
 <header class="site-header">
@@ -9,7 +9,8 @@ import { displayPhone, telHref } from "./format";
     </a>
     <nav aria-label="Main">
       {services.length > 0 && <a href="/#services">Services</a>}
-      <a href="/#hours">Hours</a>
+      {caseStudies.length > 0 && <a href="/#work">Work</a>}
+      {hours && <a href="/#hours">Hours</a>}
       <a href="/contact">Contact</a>
       <a class="btn btn-sm" href={telHref(business.phone)}>{displayPhone(business.phone)}</a>
     </nav>

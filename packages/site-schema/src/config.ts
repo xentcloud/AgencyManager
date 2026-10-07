@@ -12,6 +12,8 @@ export const siteConfigSchema = z.object({
   /** Canonical production URL, e.g. https://smiledental.com */
   url: z.url(),
   locale: z.string().default("en-US"),
+  /** Path under /public, e.g. "/favicon.svg". Falls back to the business logo. */
+  favicon: z.string().startsWith("/").optional(),
   theme: z
     .object({
       preset: z.enum(themePresets).default("modern"),
@@ -21,7 +23,7 @@ export const siteConfigSchema = z.object({
     .prefault({}),
   /** Sections rendered on the home page, in order. */
   home: z
-    .array(z.enum(["hero", "services", "about", "team", "gallery", "testimonials", "hours", "faq", "contact"]))
+    .array(z.enum(["hero", "services", "about", "stack", "work", "team", "gallery", "testimonials", "hours", "faq", "contact"]))
     .default(["hero", "services", "about", "testimonials", "hours", "contact"]),
   analytics: z
     .object({

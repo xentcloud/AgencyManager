@@ -1,5 +1,6 @@
 import { describe, expect, it } from "vitest";
 import { siteConfigSchema, validateContent } from "../src/index.js";
+import { validateContentDir } from "../src/validate.js";
 
 const hours = {
   timezone: "America/Chicago",
@@ -51,5 +52,25 @@ describe("site config", () => {
     const cfg = siteConfigSchema.parse({ id: "smile-dental", url: "https://smiledental.com" });
     expect(cfg.theme.preset).toBe("modern");
     expect(cfg.home[0]).toBe("hero");
+  });
+});
+
+describe("professional services", () => {
+  it("accepts stack groups and case studies", () => {
+    expect(validateContent("stack.yaml", [{ id: "cloud", title: "Cloud", items: ["AWS", "Azure"] }])).toEqual([]);
+    expect(validateContent("case-studies.yaml", [{ id: "acme", title: "Acme portal", summary: "Rebuilt it." }])).toEqual([]);
+  });
+  it("rejects an empty stack group", () => {
+    expect(validateContent("stack.yaml", [{ id: "x", title: "X", items: [] }]).length).toBe(1);
+  });
+});
+
+describe("content dir", () => {
+  const dir = (name: string) => new URL(`./fixtures/${name}/`, import.meta.url).pathname;
+  it("does not require hours for professional businesses", async () => {
+    expect(await validateContentDir(dir("pro"))).toEqual([]);
+  });
+  it("requires hours for local businesses", async () => {
+    expect((await validateContentDir(dir("local-missing-hours"))).map((i) => i.file)).toEqual(["hours.yaml"]);
   });
 });

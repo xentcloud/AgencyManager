@@ -34,7 +34,7 @@ const jsonLd = {
   },
   geo: business.geo ? { "@type": "GeoCoordinates", latitude: business.geo.lat, longitude: business.geo.lng } : undefined,
   areaServed: business.serviceArea.length ? business.serviceArea : undefined,
-  openingHoursSpecification: openingHoursSpec(hours),
+  openingHoursSpecification: hours ? openingHoursSpec(hours) : undefined,
   sameAs: Object.values(business.social),
 };
 const { analytics, theme } = config;
@@ -52,7 +52,7 @@ const { analytics, theme } = config;
     <meta property="og:description" content={description} />
     <meta property="og:url" content={canonical} />
     {ogImage && <meta property="og:image" content={new URL(ogImage, config.url).href} />}
-    {business.logo && <link rel="icon" href={business.logo.src} />}
+    {(config.favicon ?? business.logo?.src) && <link rel="icon" href={config.favicon ?? business.logo?.src} />}
     <script type="application/ld+json" set:html={JSON.stringify(jsonLd)} />
     {analytics.cloudflareToken && (
       <script defer src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon={JSON.stringify({ token: analytics.cloudflareToken })} />

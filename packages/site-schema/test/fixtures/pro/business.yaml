@@ -1,0 +1,5 @@
+kind: professional
+name: Acme Consulting
+description: B2B consulting.
+phone: "+19545550100"
+address: { street: 1 Main St, city: Miami, region: FL, postalCode: "33101" }

@@ -6,7 +6,7 @@ import { parse } from "yaml";
 import {
   contentFiles,
   siteConfigSchema,
-  validateContent,
+  validateContentDir,
   type SiteConfigInput,
   type ValidationIssue,
 } from "@agency/site-schema";
@@ -22,8 +22,8 @@ export interface AgencyOptions {
 }
 
 const DEFAULT_CREDIT: AgencyCredit = {
-  name: process.env.AGENCY_NAME ?? "AgencyManager",
-  url: process.env.AGENCY_URL ?? "https://github.com/agency-manager",
+  name: process.env.AGENCY_NAME ?? "Xentryx",
+  url: process.env.AGENCY_URL ?? "https://www.xentryx.com",
 };
 
 const VIRTUAL_ID = "virtual:agency/site";
@@ -31,34 +31,26 @@ const RESOLVED_ID = "\0" + VIRTUAL_ID;
 
 const pkgFile = (p: string) => fileURLToPath(new URL(`../${p}`, import.meta.url));
 
-/** Load, parse and validate every content file. Throws a readable error listing all issues. */
+/** `case-studies.yaml` → `caseStudies` */
+const exportName = (file: string) => file.replace(/\.yaml$/, "").replace(/-([a-z])/g, (_, c: string) => c.toUpperCase());
+
+/** Validate every content file (throws a readable list of all issues), then parse with defaults applied. */
 async function loadContent(contentDir: string) {
+  const issues = await validateContentDir(contentDir);
+  if (issues.length) {
+    const lines = issues.map((i: ValidationIssue) => `  ✗ ${i.file} › ${i.path}: ${i.message}`).join("\n");
+    throw new Error(`Site content is invalid:\n${lines}`);
+  }
   const data: Record<string, unknown> = {};
-  const issues: ValidationIssue[] = [];
   for (const [file, def] of Object.entries(contentFiles)) {
-    const key = file.replace(/\.yaml$/, "");
-    let raw: unknown;
+    let raw: unknown = undefined;
     try {
       raw = parse(await readFile(join(contentDir, file), "utf8"));
     } catch (e) {
-      if ((e as NodeJS.ErrnoException).code === "ENOENT") {
-        if (def.kind === "single") issues.push({ file, path: "(file)", message: "required file is missing" });
-        data[key] = def.kind === "list" ? [] : null;
-        continue;
-      }
-      issues.push({ file, path: "(file)", message: (e as Error).message });
-      continue;
+      if ((e as NodeJS.ErrnoException).code !== "ENOENT") throw e;
     }
-    const fileIssues = validateContent(file as keyof typeof contentFiles, raw);
-    issues.push(...fileIssues);
-    if (fileIssues.length === 0) {
-      const schema = def.kind === "single" ? def.schema : def.schema.array();
-      data[key] = schema.parse(raw ?? []);
-    }
-  }
-  if (issues.length) {
-    const lines = issues.map((i) => `  ✗ ${i.file} › ${i.path}: ${i.message}`).join("\n");
-    throw new Error(`Site content is invalid:\n${lines}`);
+    data[exportName(file)] =
+      def.kind === "list" ? def.schema.array().parse(raw ?? []) : raw === undefined ? null : def.schema.parse(raw);
   }
   return data;
 }

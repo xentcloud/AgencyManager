@@ -41,6 +41,7 @@ export async function validateContentDir(dir: string): Promise<ValidationIssue[]
   for (const required of requiredContentFiles) {
     if (!present.has(required)) issues.push({ file: required, path: "(file)", message: "required file is missing" });
   }
+  let businessKind: string | undefined;
   for (const name of Object.keys(contentFiles) as ContentFileName[]) {
     if (!present.has(name)) continue;
     let data: unknown;
@@ -51,6 +52,10 @@ export async function validateContentDir(dir: string): Promise<ValidationIssue[]
       continue;
     }
     issues.push(...validateContent(name, data));
+    if (name === "business.yaml") businessKind = (data as { kind?: string } | null)?.kind ?? "local";
+  }
+  if (businessKind === "local" && !present.has("hours.yaml")) {
+    issues.push({ file: "hours.yaml", path: "(file)", message: "required for local businesses (business.kind: local)" });
   }
   return issues;
 }
