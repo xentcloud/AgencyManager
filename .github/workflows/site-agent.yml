@@ -140,7 +140,7 @@ jobs:
         run: |
           git config user.name "agency-bot"
           git config user.email "agency-bot@users.noreply.github.com"
-          git add -A -- . ':!dist' ':!node_modules'
+          git add -A  # .gitignore excludes dist/ and node_modules/
           if git diff --cached --quiet; then
             gh issue comment "$N" --body "The agent made no changes. Marking for human review."
             gh issue edit "$N" --add-label needs-human
