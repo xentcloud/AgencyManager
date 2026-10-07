@@ -36,9 +36,19 @@ jobs:
             echo "::error::CLOUDFLARE_API_TOKEN / CLOUDFLARE_ACCOUNT_ID secrets are not set"; exit 1
           fi
       - uses: actions/checkout@v7
+      # A repo freshly generated from the template still has the template's Worker name until the
+      # portal's setup commit lands; never deploy that (it would create a stray "site-template" Worker).
+      - id: guard
+        run: |
+          if grep -q '"name": *"site-template"' wrangler.jsonc; then
+            echo "::notice::Unpersonalized template commit; skipping deploy"; echo "skip=true" >> "$GITHUB_OUTPUT"
+          fi
       - uses: xentcloud/AgencyManager/.github/actions/setup-site@v1
+        if: steps.guard.outputs.skip != 'true'
       - run: pnpm build
+        if: steps.guard.outputs.skip != 'true'
       - id: deploy
+        if: steps.guard.outputs.skip != 'true'
         env:
           CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
@@ -55,6 +65,7 @@ jobs:
           [ -n "$url" ] || { echo "::error::No URL in wrangler output"; exit 1; }
           echo "url=$url" >> $GITHUB_OUTPUT
       - name: Record production deployment
+        if: steps.guard.outputs.skip != 'true'
         env:
           GH_TOKEN: ${{ github.token }}
           URL: ${{ steps.deploy.outputs.url }}
