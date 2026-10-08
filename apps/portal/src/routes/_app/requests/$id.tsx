@@ -23,7 +23,7 @@ const eventText: Record<string, string> = {
   "request.deployed": "Live on the website",
   "request.needs_human": "Needs attention",
   "agent.question": "Agent has a question",
-  "agent.failed": "Agent couldn't finish — the agency will take over",
+  "agent.failed": "Agent run failed — flagged for the agency",
   "pr.closed_unmerged": "Change discarded",
 };
 

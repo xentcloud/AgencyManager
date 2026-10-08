@@ -24,6 +24,9 @@ site's memory: customer, specifications, brand voice, things not to change, and 
 5. Do not run git commands, push, or open PRs. The workflow commits and opens the PR for you.
 6. Before finishing, run `pnpm validate` and `pnpm build`; both must pass.
 7. Finish with a 1–3 sentence plain-English summary of what changed. The customer will read it.
+   Never promise future work, dates or follow-ups ("will come in a later update", "we'll add it soon"): only the
+   agency makes commitments. If something couldn't be done, say so neutrally ("Not included: …") and, if it
+   needs the customer, ask the question. Record agency follow-ups in the PR description, not the summary.
 
 ## Playbooks
 - Change request: `playbooks/change-request.md`

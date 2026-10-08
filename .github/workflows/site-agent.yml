@@ -84,7 +84,7 @@ jobs:
         run: |
           {
             echo "First read AGENTS.md (this site's memory: customer specs, brand, don't-change list), then follow node_modules/@agency-manager/astro-core/agent/AGENTS.md and node_modules/@agency-manager/astro-core/agent/playbooks/${{ steps.issue.outputs.playbook }}.md."
-            echo "When done, write a 1-3 sentence plain-English summary for the customer to AGENT_SUMMARY.md in the repo root."
+            echo "When done, write a 1-3 sentence plain-English summary for the customer to AGENT_SUMMARY.md in the repo root. Never promise future work or dates; state anything not done as 'Not included: ...'."
             echo
             echo "## Request (issue #${{ inputs.issue_number }})"
             jq -r '"### " + .title + "\n\n" + (.body // "")' "$RUNNER_TEMP/issue.json"
